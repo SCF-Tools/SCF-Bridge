@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "imports": {
-        "#root/*": "./*"
+        "#root/*": "./*",
+        "#src/*": "./src/*"
     },
     "repository": {
         "type": "git",
@@ -18,5 +19,9 @@
     "bugs": {
         "url": "https://github.com/SCF-Tools/SCF-Bridge/issues"
     },
-    "homepage": "https://github.com/SCF-Tools/SCF-Bridge#readme"
+    "homepage": "https://github.com/SCF-Tools/SCF-Bridge#readme",
+    "dependencies": {
+        "discord.js": "^14.22.1",
+        "dotenv": "^17.2.3"
+    }
 }
