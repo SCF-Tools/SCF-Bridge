@@ -1,0 +1,22 @@
+{
+    "name": "scf-bridge",
+    "version": "1.0.0",
+    "description": "A service that interlinks the Hypixel guild chat with Discord channels, as well as implements custom features.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "imports": {
+        "#root/*": "./*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SCF-Tools/SCF-Bridge.git"
+    },
+    "author": "SCF-Tools",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/SCF-Tools/SCF-Bridge/issues"
+    },
+    "homepage": "https://github.com/SCF-Tools/SCF-Bridge#readme"
+}
