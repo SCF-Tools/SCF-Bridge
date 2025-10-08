@@ -47,7 +47,7 @@ class Config {
 
     env(name) {
         if (!this.#external.fetched) {
-            throw 'Trying to use an uninitialized external config.';
+            throw new Error('Trying to use an uninitialized external config.');
         }
 
         let process_env = process.env?.[name];
