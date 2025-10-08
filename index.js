@@ -46,12 +46,16 @@ async function initParent() {
             ]
         };
 
-        axios.post(config.errors.webhook, params, {
-            headers: {
-                'Content-type': 'application/json',
-                "Authorization": config.approaches.discord.token
-            }
-        })
+        try {
+            await axios.post(config.errors.webhook, params, {
+                headers: {
+                    'Content-type': 'application/json',
+                    "Authorization": config.approaches.discord.token
+                }
+            });
+        } catch (error) {
+            logger.error("Failed to send webhook notification", error);
+        }
     }
 
     async function handleEvent(event) {
