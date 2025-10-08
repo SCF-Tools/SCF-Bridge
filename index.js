@@ -60,7 +60,7 @@ async function initParent() {
 
     async function handleEvent(event) {
         if (event.id === 'exception') {
-            await useWebhook(`An exception was caught:\n\`\`\`${event.toString()}\`\`\``, 0x800000);
+            await useWebhook(`An exception was caught:\n\`\`\`${event.exception.toString()}\`\`\``, 0x800000);
         }
         if (event.id === 'init') {
             await useWebhook(`The bridge has initialized successfully.`, 0x008000);
