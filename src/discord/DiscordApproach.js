@@ -44,10 +44,10 @@ class DiscordApproach extends Approach {
         this.config.server = config.server;
 
         this.config.channels = {
-            guild: config.channels.guild,
-            officer: config.channels.officer,
-            events: config.channels.events,
-            console: config.channels.console,
+            guild: config?.channels?.guild,
+            officer: config?.channels?.officer,
+            events: config?.channels?.events,
+            console: config?.channels?.console,
         };
 
         this.channels = new ChannelHandler(this);
