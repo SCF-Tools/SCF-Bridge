@@ -81,7 +81,19 @@ class Config {
             },
             approaches: {
                 discord: {
+                    type: "discord",
                     token: this.env("discord_token"),
+                    server: this.env("discord_server"),
+                    channels: {
+                        guild: this.env("discord_channel_guild"),
+                        officer: this.env("discord_channel_officer"),
+                        events: this.env("discord_channel_events"),
+                        console: this.env("discord_channel_console"),
+                    }
+                },
+                replica: {
+                    type: "discord",
+                    
                 }
             },
             errors: {

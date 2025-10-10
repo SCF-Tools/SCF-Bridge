@@ -8,7 +8,8 @@
     },
     "imports": {
         "#root/*": "./*",
-        "#src/*": "./src/*"
+        "#src/*": "./src/*",
+        "#shared/*": "./shared/*"
     },
     "repository": {
         "type": "git",
