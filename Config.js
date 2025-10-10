@@ -93,7 +93,14 @@ class Config {
                 },
                 replica: {
                     type: "discord",
-                    
+                    token: this.env("replica_token"),
+                    server: this.env("replica_server"),
+                    channels: {
+                        guild: this.env("replica_channel_guild"),
+                        officer: this.env("replica_channel_officer"),
+                        events: this.env("replica_channel_events"),
+                        console: this.env("replica_channel_console"),
+                    }
                 }
             },
             errors: {
