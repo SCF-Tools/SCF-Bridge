@@ -4,6 +4,7 @@ const logger = require("#src/Logger.js");
 
 class Application {
     approaches = [];
+
     async init() {
         let needed_approaches = {
             'discord': {
@@ -12,18 +13,25 @@ class Application {
             },
         };
 
+        let promises = [];
+
         for (const [approach_id, approach] of Object.entries(needed_approaches)) {
-            try {
-                const instance = new approach.class(approach_id, approach.config);
-                await instance.init();
-                if (instance.enabled) {
-                    this.approaches.push(instance);
+            promises.push(new Promise(async (resolve) => {
+                try {
+                    const instance = new approach.class(approach_id, approach.config);
+                    await instance.init();
+                    if (instance.enabled) {
+                        this.approaches.push(instance);
+                    }
                 }
-            }
-            catch (e) {
-                logger.error(`Failed to setup approach ${approach_id}!`, e)
-            }
+                catch (e) {
+                    logger.error(`Failed to setup approach ${approach_id}!`, e)
+                }
+                resolve();
+            }));
         }
+
+        await Promise.allSettled(promises);
     }
 }
 
