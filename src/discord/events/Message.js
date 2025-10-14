@@ -14,8 +14,8 @@ class MessageManager{
      * @param {import("discord.js").Message} message 
      */
     async handle(message){
-        let event = new GenericEvent(this.discord.id);
-        this.discord.emitEvent(event);
+        /*let event = new GenericEvent(this.discord.id);
+        this.discord.emitEvent(event);*/
     }
 }
 

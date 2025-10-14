@@ -3,3 +3,5 @@ class UserError extends Error{
         super(message);
     }
 }
+
+module.exports = UserError;

@@ -80,7 +80,12 @@ class Config {
                 
             },
             approaches: {
+                minecraft: {
+                    critical: true,
+                    type: "minecraft",
+                },
                 discord: {
+                    critical: true,
                     type: "discord",
                     token: this.env("discord_token"),
                     server: this.env("discord_server"),
@@ -92,6 +97,7 @@ class Config {
                     }
                 },
                 replica: {
+                    critical: false,
                     type: "discord",
                     token: this.env("replica_token"),
                     server: this.env("replica_server"),
@@ -104,7 +110,7 @@ class Config {
                 }
             },
             errors: {
-                role: "<@1249416749334396959>",
+                role: "<@476365125922586635><@\\&1249416749334396959>",
                 webhook: "https://webhook.scfprojects.su/",
             },
         };

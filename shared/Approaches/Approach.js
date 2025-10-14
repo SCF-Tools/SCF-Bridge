@@ -6,6 +6,8 @@ class Approach{
     type;
     #emitter;
 
+    enabled = false;
+
     constructor(type, id){
         this.type = type;
         this.id = id;
@@ -19,6 +21,10 @@ class Approach{
      * @param {GenericEvent} event 
      */
     async emitEvent(event){
+        if(!this.enabled){
+            return;
+        }
+        
         if(!this.#emitter){
             logger.error(`No emitter found at approach "${this.id}".`);
         }

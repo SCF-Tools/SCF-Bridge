@@ -65,6 +65,9 @@ async function initParent() {
         if (event.id === 'init') {
             await useWebhook(`The bridge has initialized successfully.`, 0x008000);
         }
+        if(event.id === 'warning'){
+            await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, 0x808000);
+        }
     }
 
     async function handleState() {
@@ -154,8 +157,8 @@ async function initParent() {
         }
 
         if (code == 124) {
-            useWebhook("Bot failed to connect to Hypixel in the provided time limit. Will attempt to reconnect after a restart.");
-            logger.error("Bot failed to connect to Hypixel in the provided time limit.");
+            useWebhook("The bridge failed to start a critical approach.");
+            logger.error("The bridge failed to start a critical approach.");
         }
 
         if (code == 5) {
