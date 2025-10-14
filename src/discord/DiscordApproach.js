@@ -54,7 +54,7 @@ class DiscordApproach extends Approach {
     commands;
 
     constructor(approach_id, config) {
-        super("discord");
+        super("discord", approach_id);
 
         if (config.token) this.enabled = true;
 

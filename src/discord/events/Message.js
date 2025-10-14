@@ -1,3 +1,5 @@
+const GenericEvent = require("#root/shared/Events/GenericEvent.js");
+
 class MessageManager{
     /**
      * @type {import("../DiscordApproach")}
@@ -12,7 +14,8 @@ class MessageManager{
      * @param {import("discord.js").Message} message 
      */
     async handle(message){
-        
+        let event = new GenericEvent(this.discord.id);
+        this.discord.emitEvent(event);
     }
 }
 

@@ -1,4 +1,4 @@
-const logger = require("#root/src/Logger");
+const logger = require("#root/src/Logger.js");
 
 class InteractionManager {
     /**

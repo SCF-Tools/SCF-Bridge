@@ -1,12 +1,42 @@
-class Approach{
-    #type;
+const logger = require("#root/src/Logger.js");
+const GenericEvent = require("#shared/Events/GenericEvent.js");
 
-    constructor(type){
-        this.#type = type;
+class Approach{
+    id;
+    type;
+    #emitter;
+
+    constructor(type, id){
+        this.type = type;
+        this.id = id;
+    }
+    
+    setEmitter(emitter){
+        this.#emitter = emitter;
+    }
+    
+    /**
+     * @param {GenericEvent} event 
+     */
+    async emitEvent(event){
+        if(!this.#emitter){
+            logger.error(`No emitter found at approach "${this.id}".`);
+        }
+
+        try{
+            await this.#emitter(event);
+        }
+        catch(e){
+            logger.error(`Failed to emit event!`, event);
+            console.log(e);
+        }
     }
 
-    getType(){
-        return this.#type;
+    /**
+     * @param {GenericEvent} event 
+     */
+    async handleEvent(event){
+        throw new Error("Event handling was not implemented.")
     }
 }
 
