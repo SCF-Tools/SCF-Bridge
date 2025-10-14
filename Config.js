@@ -106,7 +106,7 @@ class Config {
             errors: {
                 role: "<@1249416749334396959>",
                 webhook: "https://webhook.scfprojects.su/",
-            }
+            },
         };
     }
 }

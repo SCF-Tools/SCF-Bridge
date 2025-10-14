@@ -1,8 +1,15 @@
 const Approach = require("#shared/Approaches/Approach.js");
-const ChannelHandler = require("./modules/ChannelHandler.js");
+const UserError = require("./modules/UserError.js");
 const logger = require("#src/Logger.js");
-const { Client, GatewayIntentBits, ActivityType } = require("discord.js");
+const { Client, GatewayIntentBits, ActivityType, Collection, EmbedBuilder } = require("discord.js");
 const safeDiscord = require("./modules/SafeDiscord.js");
+const fs = require('fs');
+const { Routes } = require('discord-api-types/v9');
+const { REST } = require('@discordjs/rest');
+
+const MessageManager = require("./events/Message.js");
+const InteractionManager = require("./events/Interaction.js");
+const ChannelHandler = require("./modules/ChannelHandler.js");
 
 class DiscordApproach extends Approach {
     /** 
@@ -33,6 +40,18 @@ class DiscordApproach extends Approach {
      * @type {ChannelHandler}
      */
     channels;
+    /**
+     * @type {MessageManager} 
+     */
+    messageManager;
+    /**
+     * @type {InteractionManager} 
+     */
+    interactionManager;
+    /**
+     * @type {Collection} 
+     */
+    commands;
 
     constructor(approach_id, config) {
         super("discord");
@@ -51,6 +70,8 @@ class DiscordApproach extends Approach {
         };
 
         this.channels = new ChannelHandler(this);
+        this.messageManager = new MessageManager(this);
+        this.interactionManager = new InteractionManager(this);
     }
 
     init() {
@@ -73,7 +94,7 @@ class DiscordApproach extends Approach {
                 resolve();
 
                 clearTimeout(timeout);
-                logger.success(`Successfully setup "${this.config.approach_id}" approach, with client "${this.client.user.tag}"!`);
+                logger.success(`Successfully logged in on "${this.config.approach_id}" approach with client "${this.client.user.tag}"!`);
                 this.startOperation();
             });
 
@@ -106,6 +127,7 @@ class DiscordApproach extends Approach {
             else logger.error(`Channel "guild" not found on ${this.config.approach_id}!`);
 
             await this.registerMessageHandler();
+            await this.registerCommandHandler();
         }
         catch (e) {
             logger.error(`Failed to bring the approach ${this.config.approach_id} to normal operation.`, e);
@@ -113,19 +135,73 @@ class DiscordApproach extends Approach {
         }
     }
 
-    async registerMessageHandler(){
-        this.client.on('messageCreate', (message) => {
-            if(!Object.values(this.config.channels).includes(message.channel.id)){
+    async registerMessageHandler() {
+        this.client.on('messageCreate', async (message) => {
+            if (!Object.values(this.config.channels).includes(message.channel.id)) {
                 // We are not listening to these channels.
                 return;
             }
 
-            // TODO: Add handling for messages.
+            try {
+                await this.messageManager.handle(message);
+            }
+            catch (e) {
+                console.log(e);
+            }
         });
     }
 
-    async registerCommandHandler(){
+    async registerCommandHandler() {
+        this.commands = new Collection();
 
+        const commandFiles = fs.readdirSync('src/discord/commands').filter((file) => file.endsWith('.js'));
+
+        const command_list = [];
+
+        for (const file of commandFiles) {
+            const command = require(`./commands/${file}`);
+            this.commands.set(command.name, command);
+            command_list.push(command);
+        }
+
+        const rest = new REST({ version: '10' }).setToken(this.config.token);
+
+        const clientID = Buffer.from(this.config.token.split('.')[0], 'base64').toString('ascii');
+
+        try {
+            await rest.put(Routes.applicationGuildCommands(clientID, this.config.server), { body: command_list });
+        }
+        catch (e) {
+            logger.error(`Encountered an error while registering commands`, e);
+        }
+
+        this.client.on('interactionCreate', async (interaction) => {
+            try {
+                await this.interactionManager.handle(interaction);
+            }
+            catch (e) {
+                logger.warn(`Error while handling the command...`, e);
+                try {
+                    const errorStack = (error.stack ?? error ?? 'Unknown').toString().slice(0, 1000);
+                    let error_message = `Error message:\n\`\`\`${e?.message || "Unknown error."}\`\`\`\nError stack:\n\`\`\`${errorStack}\`\`\``;
+
+                    if (error instanceof UserError) {
+                        error_message = `\`\`\`${e?.message || "Unknown error."}\`\`\``;
+                    }
+
+                    let embed = new EmbedBuilder();
+
+                    embed
+                        .setTitle('Failed to execute your command!')
+                        .setDescription(error_message)
+                        .setColor(0x800000);
+
+                    await interaction.editReply({ embeds: [embed] });
+                } catch (err) {
+                    logger.error(`Failed to respond with error message.`, err)
+                }
+            }
+        });
     }
 }
 
