@@ -188,10 +188,10 @@ class DiscordApproach extends Approach {
             catch (e) {
                 logger.warn(`Error while handling the command...`, e);
                 try {
-                    const errorStack = (error.stack ?? error ?? 'Unknown').toString().slice(0, 1000);
+                    const errorStack = (e.stack ?? e ?? 'Unknown').toString().slice(0, 1000);
                     let error_message = `Error message:\n\`\`\`${e?.message || "Unknown error."}\`\`\`\nError stack:\n\`\`\`${errorStack}\`\`\``;
 
-                    if (error instanceof UserError) {
+                    if (e instanceof UserError) {
                         error_message = `\`\`\`${e?.message || "Unknown error."}\`\`\``;
                     }
 
