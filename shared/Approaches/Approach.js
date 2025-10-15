@@ -30,6 +30,7 @@ class Approach{
         
         if(!this.#app){
             logger.error(`No application defined at approach "${this.id}".`);
+            return;
         }
 
         try{
