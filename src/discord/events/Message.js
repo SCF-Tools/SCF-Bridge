@@ -26,7 +26,7 @@ class MessageManager {
         }
 
         if(message.author.bot && !config.allowed_bots.includes(message.author.id)){
-            return; // We do not listen to bot messages.
+            return; // We are not listening to bot messages.
         }
 
         if (message.channel.id === this.discord.config.channels.console) {

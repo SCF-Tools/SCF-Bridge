@@ -1,5 +1,3 @@
-const Approach = require("#shared/Approaches/Approach.js");
-
 const DiscordApproach = require("#src/discord/DiscordApproach.js");
 const MinecraftApproach = require("#src/minecraft/MinecraftApproach.js");
 const SCFApproach = require("#src/scf/SCFApproach.js");
@@ -9,7 +7,7 @@ const logger = require("#src/Logger.js");
 
 class Application {
     /**
-     * @type {Approach[]}
+     * @type {import("#shared/Approaches/Approach.js")[]}
      */
     approaches = [];
 

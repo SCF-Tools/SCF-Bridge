@@ -1,4 +1,4 @@
-const UserError = require("#root/src/discord/modules/UserError.js");
+const UserError = require("#src/discord/modules/UserError.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 
 class ExternalEventManager {

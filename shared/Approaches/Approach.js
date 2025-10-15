@@ -1,4 +1,4 @@
-const logger = require("#root/src/Logger.js");
+const logger = require("#src/Logger.js");
 const GenericEvent = require("#shared/Events/GenericEvent.js");
 
 class Approach{
