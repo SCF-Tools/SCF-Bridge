@@ -42,7 +42,7 @@ class MinecraftApproach extends Approach {
                         this.bot.end("force");
                     }
                     catch (e) { }
-                    reject(`Failed to setup the ${this.config.approach_id} approach in 180 seconds.`);
+                    reject(`Failed to setup the ${this.id} approach in 180 seconds.`);
                 }, 3 * 60 * 1000);
 
                 this.bot = mineflayer.createBot({
@@ -58,10 +58,10 @@ class MinecraftApproach extends Approach {
                 this.startOperation();
 
                 this.bot.on('login', () => {
-                    resolve();
-
                     this.loginAttempts = 0;
                     this.enabled = true;
+
+                    resolve();
 
                     clearTimeout(timeout);
                     logger.success(`Successfully logged in on "${this.id}" approach with client "${this.bot.username}"!`);

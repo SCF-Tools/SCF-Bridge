@@ -2,18 +2,18 @@ const DiscordConsoleEvent = require("#shared/Events/DiscordConsoleEvent.js");
 
 /**
  * @typedef {Object} ChatMessage
- * @property {any} message.json - Raw JSON representation of the message
- * @property {Function} message.append
- * @property {Function} message.clone
- * @property {Object[]} [message.extra]
- * @property {string} [message.translate]
- * @property {Function} message.toString
- * @property {Function} message.toMotd
- * @property {Function} message.toAnsi
- * @property {Function} message.toHTML
- * @property {Function} message.length
- * @property {Function} message.getText
- * @property {Function} message.valueOf
+ * @property {any} json
+ * @property {Function} append
+ * @property {Function} clone
+ * @property {Object[]} [extra]
+ * @property {string} [translate]
+ * @property {Function} toString
+ * @property {Function} toMotd
+ * @property {Function} toAnsi
+ * @property {Function} toHTML
+ * @property {Function} length
+ * @property {Function} getText
+ * @property {Function} valueOf
  */
 
 class MessageManager {

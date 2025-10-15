@@ -83,7 +83,7 @@ class DiscordApproach extends Approach {
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 this.enabled = false;
-                reject(`Failed to setup the ${this.config.approach_id} approach in 60 seconds.`);
+                reject(`Failed to setup the ${this.id} approach in 60 seconds.`);
             }, 60_000);
 
             if(!this.config.token){
@@ -97,7 +97,7 @@ class DiscordApproach extends Approach {
 
             this.client.login(this.config.token).catch((error) => {
                 this.enabled = false;
-                logger.error(`Failed to log into Discord at ${this.config.approach_id}.`, error);
+                logger.error(`Failed to log into Discord at ${this.id}.`, error);
             });
 
             this.client.on('clientReady', () => {
@@ -105,7 +105,7 @@ class DiscordApproach extends Approach {
                 resolve();
 
                 clearTimeout(timeout);
-                logger.success(`Successfully logged in on "${this.config.approach_id}" approach with client "${this.client.user.tag}"!`);
+                logger.success(`Successfully logged in on "${this.id}" approach with client "${this.client.user.tag}"!`);
                 this.startOperation();
             });
 
@@ -135,13 +135,13 @@ class DiscordApproach extends Approach {
                     ]
                 });
             }
-            else logger.error(`Channel "guild" not found on ${this.config.approach_id}!`);
+            else logger.error(`Channel "guild" not found on ${this.id}!`);
 
             await this.registerMessageHandler();
             await this.registerCommandHandler();
         }
         catch (e) {
-            logger.error(`Failed to bring the approach ${this.config.approach_id} to normal operation.`, e);
+            logger.error(`Failed to bring the approach ${this.id} to normal operation.`, e);
             this.enabled = false;
         }
     }

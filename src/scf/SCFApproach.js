@@ -31,13 +31,15 @@ class SCFApproach extends Approach {
                     throw "Invalid SCF ID";
                 }
 
-                resolve();
                 this.enabled = true;
+
+                resolve();
 
                 logger.success(`Successfully logged in on "${this.id}" approach with client "${info.scf_id}"!`);
             }
             catch (e) {
                 logger.warn(`Uncaught exception in ${this.id}.`, e);
+                reject(`Caught an exception while init.`);
             }
         });
     }
