@@ -4,7 +4,10 @@ const GenericEvent = require("#shared/Events/GenericEvent.js");
 class Approach{
     id;
     type;
-    #emitter;
+    /**
+     * @type {import("../../src/Application.js")}
+     */
+    #app = null;
 
     enabled = false;
 
@@ -13,8 +16,8 @@ class Approach{
         this.id = id;
     }
     
-    setEmitter(emitter){
-        this.#emitter = emitter;
+    setApplication(application){
+        this.#app = application;
     }
     
     /**
@@ -25,12 +28,12 @@ class Approach{
             return;
         }
         
-        if(!this.#emitter){
-            logger.error(`No emitter found at approach "${this.id}".`);
+        if(!this.#app){
+            logger.error(`No application defined at approach "${this.id}".`);
         }
 
         try{
-            await this.#emitter(event);
+            await this.#app.routeEvent(event);
         }
         catch(e){
             logger.error(`Failed to emit event!`, event);

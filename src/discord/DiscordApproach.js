@@ -10,6 +10,7 @@ const { REST } = require('@discordjs/rest');
 const MessageManager = require("./events/Message.js");
 const InteractionManager = require("./events/Interaction.js");
 const ChannelHandler = require("./modules/ChannelHandler.js");
+const ExternalEventManager = require("./events/ExternalEvent.js");
 
 class DiscordApproach extends Approach {
     /** 
@@ -30,7 +31,6 @@ class DiscordApproach extends Approach {
      * @type {DiscordConfig}
      */
     config = {};
-    enabled = false;
     /**
      * @type {Client}
      */
@@ -48,6 +48,10 @@ class DiscordApproach extends Approach {
      * @type {InteractionManager} 
      */
     interactionManager;
+    /**
+     * @type {ExternalEventManager}
+     */
+    externalEventManager;
     /**
      * @type {Collection} 
      */
@@ -72,6 +76,7 @@ class DiscordApproach extends Approach {
         this.channels = new ChannelHandler(this);
         this.messageManager = new MessageManager(this);
         this.interactionManager = new InteractionManager(this);
+        this.externalEventManager = new ExternalEventManager(this);
     }
 
     init() {
@@ -91,6 +96,7 @@ class DiscordApproach extends Approach {
             });
 
             this.client.on('clientReady', () => {
+                this.enabled = true;
                 resolve();
 
                 clearTimeout(timeout);
@@ -137,11 +143,6 @@ class DiscordApproach extends Approach {
 
     async registerMessageHandler() {
         this.client.on('messageCreate', async (message) => {
-            if (!Object.values(this.config.channels).includes(message.channel.id)) {
-                // We are not listening to these channels.
-                return;
-            }
-
             try {
                 await this.messageManager.handle(message);
             }
@@ -202,6 +203,10 @@ class DiscordApproach extends Approach {
                 }
             }
         });
+    }
+
+    async handleEvent(event){
+        await this.externalEventManager.handle(event);
     }
 }
 

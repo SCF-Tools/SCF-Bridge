@@ -31,7 +31,7 @@ class Application {
                     const instance = new approach.class(approach_id, approach.config);
                     await instance.init();
                     if (instance.enabled) {
-                        instance.setEmitter(this.routeEvent.bind(this));
+                        instance.setApplication(this);
                         this.approaches.push(instance);
                     }
                 }

@@ -1,6 +1,9 @@
 const Approach = require("#shared/Approaches/Approach.js");
 const logger = require("#src/Logger.js");
 
+const MessageManager = require("./events/Message.js");
+const ExternalEventManager = require("./events/ExternalEvent.js");
+
 const mineflayer = require('mineflayer');
 
 class MinecraftApproach extends Approach {
@@ -11,10 +14,22 @@ class MinecraftApproach extends Approach {
      */
     bot;
 
+    /**
+     * @type {MessageManager} 
+     */
+    messageManager;
+    /**
+     * @type {ExternalEventManager} 
+     */
+    externalEventManager;
+
     loginAttempts = 0;
 
     constructor(approach_id, config) {
         super("minecraft", approach_id);
+        
+        this.messageManager = new MessageManager(this);
+        this.externalEventManager = new ExternalEventManager(this);
     }
 
     init() {
@@ -31,25 +46,29 @@ class MinecraftApproach extends Approach {
                 }, 3 * 60 * 1000);
 
                 this.bot = mineflayer.createBot({
-                    host: 'mc.scfprojects.su',
+                    host: 'mc.hypixel.net',
                     port: 25565,
                     auth: 'microsoft',
-                    version: '1.21.5',
+                    version: '1.8.9',
                     viewDistance: 'tiny',
                     chatLengthLimit: 255,
                     profilesFolder: './auth-cache'
                 });
 
+                this.startOperation();
+
                 this.bot.on('login', () => {
-                    this.loginAttempts = 0;
                     resolve();
+
+                    this.loginAttempts = 0;
+                    this.enabled = true;
 
                     clearTimeout(timeout);
                     logger.success(`Successfully logged in on "${this.id}" approach with client "${this.bot.username}"!`);
-                    this.startOperation();
                 });
 
                 this.bot.on("end", (reason) => {
+                    this.enabled = false;
                     if (reason === 'force') {
                         return;
                     }
@@ -70,6 +89,7 @@ class MinecraftApproach extends Approach {
                 });
 
                 this.bot.on("kicked", (reason) => {
+                    this.enabled = false;
                     logger.warn(`Minecraft bot has been kicked from the server.`, reason);
 
                     process.send({
@@ -92,9 +112,18 @@ class MinecraftApproach extends Approach {
     }
 
     async startOperation() {
-        this.bot.on("chat", (username, message) => {
-            console.log(username, message);
-        })
+        this.bot.on('message', async (message) => {
+            try{
+                await this.messageManager.handle(message);
+            }
+            catch(e){
+                console.log(e);
+            }
+        });
+    }
+
+    async handleEvent(event){
+        await this.externalEventManager.handle(event);
     }
 }
 
