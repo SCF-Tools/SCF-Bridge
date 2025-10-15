@@ -66,6 +66,8 @@ class Application {
      * @param {import("../shared/Events/GenericEvent")}
      */
     async routeEvent(event){
+        const promises = [];
+        
         for(const approach of this.approaches){
             if(approach.id == event.emitter_id){
                 continue;
@@ -73,8 +75,15 @@ class Application {
             if(!approach.enabled){
                 continue;
             }
-            await approach.handleEvent(event);
+
+            promises.push(
+                approach.handleEvent(event).catch(error => {
+                    logger.error(`Error handling event in approach ${approach.id}`, error);
+                })
+            );
         }
+        
+        await Promise.allSettled(promises);
     }
 }
 
