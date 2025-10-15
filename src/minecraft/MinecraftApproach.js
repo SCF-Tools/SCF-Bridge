@@ -27,7 +27,7 @@ class MinecraftApproach extends Approach {
 
     constructor(approach_id, config) {
         super("minecraft", approach_id);
-        
+
         this.messageManager = new MessageManager(this);
         this.externalEventManager = new ExternalEventManager(this);
     }

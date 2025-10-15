@@ -147,6 +147,10 @@ class Config {
                         events: this.env("replica_channel_events"),
                         console: this.env("replica_channel_console"),
                     }
+                },
+                scf: {
+                    critical: false,
+                    client: SCF
                 }
             },
             errors: {

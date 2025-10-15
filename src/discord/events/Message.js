@@ -17,11 +17,11 @@ class MessageManager {
      * @param {import("discord.js").Message} message 
      */
     async handle(message) {
-        if (!Object.values(this.config.channels).includes(message.channel.id)) {
+        if (!Object.values(this.discord.config.channels).includes(message.channel.id)) {
             return; // We are not listening to these channels.
         }
 
-        if (message.author.id == this.client.user.id) {
+        if (message.author.id == this.discord.client.user.id) {
             return; // We are not listening to ourselves.
         }
 

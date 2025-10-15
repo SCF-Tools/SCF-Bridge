@@ -86,6 +86,11 @@ class DiscordApproach extends Approach {
                 reject(`Failed to setup the ${this.config.approach_id} approach in 60 seconds.`);
             }, 60_000);
 
+            if(!this.config.token){
+                reject(`Approach ${this.id} is not configured.`);
+                return;
+            }
+
             this.client = new Client({
                 intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
             });

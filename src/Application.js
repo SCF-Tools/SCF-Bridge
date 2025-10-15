@@ -1,7 +1,9 @@
 const Approach = require("#shared/Approaches/Approach.js");
-const GenericEvent = require("#shared/Events/GenericEvent.js");
+
 const DiscordApproach = require("#src/discord/DiscordApproach.js");
 const MinecraftApproach = require("#src/minecraft/MinecraftApproach.js");
+const SCFApproach = require("#src/scf/SCFApproach.js");
+
 const config = require("#root/Config.js").get();
 const logger = require("#src/Logger.js");
 
@@ -21,6 +23,14 @@ class Application {
                 class: DiscordApproach,
                 config: config.approaches.discord
             },
+            'replica': {
+                class: DiscordApproach,
+                config: config.approaches.replica
+            },
+            'scf': {
+                class: SCFApproach,
+                config: config.approaches.scf
+            },
         };
 
         let promises = [];
@@ -36,7 +46,7 @@ class Application {
                     }
                 }
                 catch (e) {
-                    logger.error(`Failed to setup approach ${approach_id}!`, e)
+                    logger.warn(`Failed to setup approach ${approach_id}!`, e)
                     if(approach.config.critical){
                         process.exit(124);
                     }
@@ -46,10 +56,14 @@ class Application {
         }
 
         await Promise.allSettled(promises);
+
+        process.send({
+            id: 'init',
+        });
     }
 
     /**
-     * @param {GenericEvent} event 
+     * @param {import("../shared/Events/GenericEvent")}
      */
     async routeEvent(event){
         for(const approach of this.approaches){

@@ -1,5 +1,4 @@
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
-const GenericEvent = require("#shared/Events/GenericEvent.js");
 
 class ExternalEventManager {
     /**
@@ -12,7 +11,7 @@ class ExternalEventManager {
     }
 
     /**
-     * @param {GenericEvent} event 
+     * @param {import("#shared/Events/GenericEvent.js")} event 
      */
     async handle(event) {
         if (event instanceof MinecraftRawEvent) {

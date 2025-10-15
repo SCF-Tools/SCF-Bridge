@@ -1,5 +1,4 @@
 const DiscordConsoleEvent = require("#shared/Events/DiscordConsoleEvent.js");
-const GenericEvent = require("#shared/Events/GenericEvent.js");
 const { AttachmentBuilder } = require("discord.js");
 const messageToImage = require("#shared/ImageRenderer/messageToImage.js");
 
@@ -14,7 +13,7 @@ class ExternalEventManager {
     }
 
     /**
-     * @param {GenericEvent} event 
+     * @param {import("#shared/Events/GenericEvent.js")} event 
      */
     async handle(event) {
         if (event instanceof DiscordConsoleEvent) {
