@@ -28,7 +28,7 @@ class SCFApproach extends Approach {
                 let info = await this.client.API.token.me();
                 
                 if(!info.scf_id){
-                    throw "Invalid SCF ID";
+                    throw new Error("Invalid SCF ID");
                 }
 
                 this.enabled = true;

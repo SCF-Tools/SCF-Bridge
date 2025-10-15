@@ -60,8 +60,6 @@ class DiscordApproach extends Approach {
     constructor(approach_id, config) {
         super("discord", approach_id);
 
-        if (config.token) this.enabled = true;
-
         this.config.approach_id = approach_id;
         this.config.token = config.token;
         this.config.server = config.server;

@@ -1,4 +1,4 @@
-const MinecraftRawEvent = require("#root/shared/Events/MinecraftRawEvent.js");
+const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 const config = require("#root/Config.js").get();
 
 const Permissions = require("../modules/PermissionManager.js");
