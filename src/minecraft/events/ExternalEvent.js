@@ -1,3 +1,4 @@
+const UserError = require("#root/src/discord/modules/UserError.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 
 class ExternalEventManager {
@@ -15,6 +16,9 @@ class ExternalEventManager {
      */
     async handle(event) {
         if (event instanceof MinecraftRawEvent) {
+            if (!this.minecraft.isConnected()) {
+                throw new UserError("The bridge is not ready.")
+            }
             this.minecraft.bot.chat(event.payload.message);
         }
 
