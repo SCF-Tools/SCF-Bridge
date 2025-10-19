@@ -1,6 +1,7 @@
 const Approach = require("#shared/Approaches/Approach.js");
 const logger = require("#src/Logger.js");
 
+const LongpollManager = require("./modules/LongpollManager.js");
 const ExternalEventManager = require("./events/ExternalEvent.js");
 
 class SCFApproach extends Approach {
@@ -8,6 +9,11 @@ class SCFApproach extends Approach {
      * @type {import("scf-api").default}
      */
     client;
+
+    /**
+     * @type {LongpollManager}
+     */
+    longpollManager;
 
     /**
      * @type {ExternalEventManager} 
@@ -19,11 +25,17 @@ class SCFApproach extends Approach {
 
         this.client = config.client;
 
+        this.longpollManager = new LongpollManager(this);
         this.externalEventManager = new ExternalEventManager(this);
     }
 
     init() {
         return new Promise(async (resolve, reject) => {
+            if(!this.client){
+                resolve();
+                return;
+            }
+
             try {
                 let info = await this.client.API.token.me();
                 
@@ -45,7 +57,7 @@ class SCFApproach extends Approach {
     }
 
     async startOperation() {
-
+        this.longpollManager.start();
     }
 
     async handleEvent(event){

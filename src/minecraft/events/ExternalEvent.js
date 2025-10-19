@@ -1,5 +1,7 @@
 const UserError = require("#src/discord/modules/UserError.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
+const MessageGuildEvent = require("#root/shared/Events/MessageGuildEvent.js");
+const MessageOfficerEvent = require("#root/shared/Events/MessageOfficerEvent.js");
 
 class ExternalEventManager {
     /**
@@ -15,13 +17,23 @@ class ExternalEventManager {
      * @param {import("#shared/Events/GenericEvent.js")} event 
      */
     async handle(event) {
+        if(!this.minecraft.isConnected()){
+            return;
+        }
+
         if (event instanceof MinecraftRawEvent) {
-            if (!this.minecraft.isConnected()) {
-                throw new UserError("The bridge is not ready.")
-            }
             this.minecraft.bot.chat(event.payload.message);
         }
 
+        if(event instanceof MessageGuildEvent || event instanceof MessageOfficerEvent){
+            let message = event.payload.message;
+            let nick = event.payload.player.display_name;
+            let channel = "/gc";
+
+            if(event instanceof MessageOfficerEvent) channel = "/oc";
+
+            this.minecraft.bot.chat(`${channel} ${nick} » ${message}`);
+        }
     }
 }
 

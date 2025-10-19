@@ -117,18 +117,24 @@ class Config {
                 }
             },
             API: {
-
+                Mojang: {
+                    nick_proxy: "https://mojang.dssoftware.ru/?nick=",
+                    uuid_proxy: "https://mojang.dssoftware.ru/?uuid=",
+                },
+                Hypixel: {
+                    key: this.env("hypixel_token"),
+                    proxy: "hypixel.dssoftware.ru"
+                }
             },
             approaches: {
                 minecraft: {
                     critical: true,
-                    type: "minecraft",
                 },
                 discord: {
                     critical: true,
-                    type: "discord",
                     token: this.env("discord_token"),
                     server: this.env("discord_server"),
+                    prefix: this.env('discord_prefix'),
                     channels: {
                         guild: this.env("discord_channel_guild"),
                         officer: this.env("discord_channel_officer"),
@@ -138,9 +144,9 @@ class Config {
                 },
                 replica: {
                     critical: false,
-                    type: "discord",
                     token: this.env("replica_token"),
                     server: this.env("replica_server"),
+                    prefix: this.env('replica_prefix'),
                     channels: {
                         guild: this.env("replica_channel_guild"),
                         officer: this.env("replica_channel_officer"),

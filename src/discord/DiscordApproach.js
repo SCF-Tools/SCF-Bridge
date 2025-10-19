@@ -24,6 +24,7 @@ class DiscordApproach extends Approach {
      * @property {?string} approach_id
      * @property {?string} token
      * @property {?string} server
+     * @property {?string} prefix
      * @property {DiscordChannels} channels
      */
 
@@ -63,6 +64,7 @@ class DiscordApproach extends Approach {
         this.config.approach_id = approach_id;
         this.config.token = config.token;
         this.config.server = config.server;
+        this.config.prefix = config.prefix;
 
         this.config.channels = {
             guild: config?.channels?.guild,
