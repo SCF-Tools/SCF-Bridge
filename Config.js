@@ -76,11 +76,56 @@ class Config {
                 unique_id: `${this.env('unique_id')} | Prefix: ${this.env('discord_prefix')}`,
                 logo: this.env('logo_url')
             },
+            permissions: {
+                "EVERYONE": {
+                    "name": "Everyone",
+                    "level": 0,
+                    "roles": []
+                },
+                "MODERATOR": {
+                    "name": "Staff Team Member",
+                    "level": 1,
+                    "roles": [
+                        "1048690255903072339", // SCF Jr. Moderator
+                        "1048690255903072340", // SCF Moderator
+
+                        "1266856339406192700", // SBU Guild Staff
+                        "924332988743966751", // SBU Jr. Moderator
+                        "801634222577156097", // SBU Moderator
+                    ],
+                },
+                "ADMINISTRATOR": {
+                    "name": "Management Team Member",
+                    "level": 2,
+                    "roles": [
+                        "1370636617303195728", // SCF Jr. Administrator
+                        "1048690255903072342", // SCF Administrator
+
+                        "808070562046935060", // SBU Jr. Administrator
+                        "766041783137468506", // SBU Administrator
+                    ],
+                },
+                "COUNCIL": {
+                    "name": "Council",
+                    "level": 3,
+                    "roles": [
+                        "1220104308767588503", // SCF Council
+
+                        "803275569356865556", // SBU Council
+                        "1384958818634698792", // SBU Star
+                    ],
+                }
+            },
             API: {
-                
+
             },
             approaches: {
+                minecraft: {
+                    critical: true,
+                    type: "minecraft",
+                },
                 discord: {
+                    critical: true,
                     type: "discord",
                     token: this.env("discord_token"),
                     server: this.env("discord_server"),
@@ -92,6 +137,7 @@ class Config {
                     }
                 },
                 replica: {
+                    critical: false,
                     type: "discord",
                     token: this.env("replica_token"),
                     server: this.env("replica_server"),
@@ -101,12 +147,17 @@ class Config {
                         events: this.env("replica_channel_events"),
                         console: this.env("replica_channel_console"),
                     }
+                },
+                scf: {
+                    critical: false,
+                    client: SCF
                 }
             },
             errors: {
-                role: "<@1249416749334396959>",
+                role: "<@476365125922586635><@\\&1249416749334396959>",
                 webhook: "https://webhook.scfprojects.su/",
-            }
+            },
+            allowed_bots: []
         };
     }
 }
