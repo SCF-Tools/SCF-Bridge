@@ -22,7 +22,9 @@ class ExternalEventManager {
         }
 
         if (event instanceof MinecraftRawEvent) {
-            this.minecraft.bot.chat(event.payload.message);
+            let command = event.payload.message.toString().slice(0, 250);
+            
+            this.minecraft.bot.chat(command);
         }
 
         if(event instanceof MessageGuildEvent || event instanceof MessageOfficerEvent){
@@ -32,7 +34,9 @@ class ExternalEventManager {
 
             if(event instanceof MessageOfficerEvent) channel = "/oc";
 
-            this.minecraft.bot.chat(`${channel} ${nick} » ${message}`);
+            let command = `${channel} ${nick} » ${message}`.toString().slice(0, 250);
+            
+            this.minecraft.bot.chat(command);
         }
     }
 }

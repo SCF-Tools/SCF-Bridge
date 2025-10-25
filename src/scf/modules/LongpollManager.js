@@ -2,7 +2,7 @@ const logger = require("#src/Logger.js");
 const SCFApproach = require("../SCFApproach.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 
-const { exec } = require('node:child_process');
+const { exec, execSync } = require('node:child_process');
 
 class LongpollManager {
     /**
@@ -56,7 +56,34 @@ class LongpollManager {
                     setTimeout(() => {
                         exec('pkill -f node');
                     }, 10_000)
-                    
+
+                    completed = true;
+                }
+
+                if (act_type == 'deploy') {
+                    async function updateCode() {
+                        return new Promise((resolve) => {
+                            try {
+                                execSync('git pull');
+                                execSync('git fetch --all');
+                                execSync('git reset --hard');
+                                execSync('npm install');
+                                execSync('npm update');
+
+                                process.exit(5);
+                            }
+                            catch (e) {
+                                console.log(e);
+                            }
+                            finally {
+                                resolve();
+                            }
+                        })
+                    }
+
+                    let timeout = (act_data.timeout ?? 0) * 10000;
+                    setTimeout(updateCode, timeout);
+
                     completed = true;
                 }
 
@@ -122,22 +149,7 @@ class LongpollManager {
 
                     completed = true;
                 }
-                if (act_type == 'deploy') {
-                    async function updateCode() {
-                        await asyncExec('git pull');
-                        await asyncExec('git fetch --all');
-                        await asyncExec('git reset --hard');
-                        await asyncExec('npm install');
-                        await asyncExec('npm update');
-
-                        process.exit(5);
-                    }
-
-                    let timeout = (act_data.timeout ?? 0) * 10000;
-                    setTimeout(updateCode, timeout);
-
-                    completed = true;
-                }*/
+                */
 
                 if (completed) {
                     await this.scf.client.API.longpoll.remove(act_rid);

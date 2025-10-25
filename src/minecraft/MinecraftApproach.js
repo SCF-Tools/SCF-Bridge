@@ -7,7 +7,9 @@ const ExternalEventManager = require("./events/ExternalEvent.js");
 const mineflayer = require('mineflayer');
 
 class MinecraftApproach extends Approach {
-    config = {};
+    config = {
+        prefix: ""
+    };
 
     /**
      * @type {import("mineflayer").Bot}
@@ -27,6 +29,8 @@ class MinecraftApproach extends Approach {
 
     constructor(approach_id, config) {
         super("minecraft", approach_id);
+
+        this.config.prefix = config.prefix;
 
         this.messageManager = new MessageManager(this);
         this.externalEventManager = new ExternalEventManager(this);

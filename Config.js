@@ -74,7 +74,7 @@ class Config {
             SCF: SCF,
             identity: {
                 unique_id: `${this.env('unique_id')} | Prefix: ${this.env('discord_prefix')}`,
-                logo: this.env('logo_url')
+                logo: this.env('logo_url'),
             },
             permissions: {
                 "EVERYONE": {
@@ -129,6 +129,7 @@ class Config {
             approaches: {
                 minecraft: {
                     critical: true,
+                    prefix: "!"
                 },
                 discord: {
                     critical: true,
