@@ -124,6 +124,9 @@ class Config {
                 Hypixel: {
                     key: this.env("hypixel_token"),
                     proxy: "hypixel.dssoftware.ru"
+                },
+                SkyKings: {
+                    key: this.env("skykings_token"),
                 }
             },
             approaches: {

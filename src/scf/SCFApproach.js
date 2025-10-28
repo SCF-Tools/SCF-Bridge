@@ -47,6 +47,8 @@ class SCFApproach extends Approach {
 
                 resolve();
 
+                this.startOperation();
+
                 logger.success(`Successfully logged in on "${this.id}" approach with client "${info.scf_id}"!`);
             }
             catch (e) {
