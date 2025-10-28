@@ -113,7 +113,7 @@ class MessageManager {
             }
 
             if (playerInfo.issues.bridgelocked) {
-                await message.react('❌').catch((e) => { });
+                await message.react('🚫').catch((e) => { });
                 return;
             }
 
@@ -133,7 +133,7 @@ class MessageManager {
             }
 
             if (message.channel.id === this.discord.config.channels.officer) {
-                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.COUNCIL, true);
+                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.MODERATOR, true);
                 if (!can_execute) {
                     message.react("❌");
                     return;
@@ -143,7 +143,7 @@ class MessageManager {
                     display_name: playerInfo.display_name,
                     uuid: playerInfo.user.uuid,
                     guild_id: playerInfo.user.guild_id
-                }, message.content);
+                }, cleaned_message);
                 this.discord.emitEvent(event);
                 return;
             }
@@ -153,7 +153,7 @@ class MessageManager {
                     display_name: playerInfo.display_name,
                     uuid: playerInfo.user.uuid,
                     guild_id: playerInfo.user.guild_id
-                }, message.content);
+                }, cleaned_message);
                 this.discord.emitEvent(event);
                 return;
             }
