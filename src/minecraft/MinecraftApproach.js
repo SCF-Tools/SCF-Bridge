@@ -30,6 +30,10 @@ class MinecraftApproach extends Approach {
 
         this.messageManager = new MessageManager(this);
         this.externalEventManager = new ExternalEventManager(this);
+
+        setInterval(() => {
+            this.loginAttempts = 0;
+        }, 12 * 60 * 60 * 1000)
     }
 
     init() {
@@ -58,7 +62,6 @@ class MinecraftApproach extends Approach {
                 this.startOperation();
 
                 this.bot.on('login', () => {
-                    this.loginAttempts = 0;
                     this.enabled = true;
 
                     setTimeout(() => {
