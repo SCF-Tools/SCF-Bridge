@@ -1,4 +1,4 @@
-const Approach = require("#shared/Approaches/Approach.js");
+const Approach = require("#shared/Classes/Approach.js");
 const logger = require("#src/Logger.js");
 
 const MessageManager = require("./events/Message.js");
@@ -60,6 +60,13 @@ class MinecraftApproach extends Approach {
                 this.bot.on('login', () => {
                     this.loginAttempts = 0;
                     this.enabled = true;
+
+                    setTimeout(() => {
+                        try{
+                            this.bot.chat("/whereami");
+                        }
+                        catch(e) {}
+                    }, 1_000);
 
                     resolve();
 

@@ -35,8 +35,13 @@ class MessageManager {
 
         this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch(e => { console.log(e) });
 
-        if (cleanMessage.includes(' the lobby!') && cleanMessage.includes('[MVP+')) {
+        if (cleanMessage.includes(' the lobby!') && cleanMessage.includes('[MVP+') && !cleanMessage.includes(':')) {
             this.minecraft.bot.chat("/limbo");
+            return;
+        }
+        if (cleanMessage.includes('You are currently connected to') && !cleanMessage.includes(':')) {
+            this.minecraft.bot.chat("/limbo");
+            return;
         }
     }
 }

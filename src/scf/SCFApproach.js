@@ -1,4 +1,4 @@
-const Approach = require("#shared/Approaches/Approach.js");
+const Approach = require("#shared/Classes/Approach.js");
 const logger = require("#src/Logger.js");
 
 const LongpollManager = require("./modules/LongpollManager.js");

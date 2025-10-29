@@ -7,7 +7,7 @@ const logger = require("#src/Logger.js");
 
 class Application {
     /**
-     * @type {import("#shared/Approaches/Approach.js")[]}
+     * @type {import("#shared/Classes/Approach.js")[]}
      */
     approaches = [];
 

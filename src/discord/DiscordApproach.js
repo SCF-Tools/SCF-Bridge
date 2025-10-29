@@ -1,7 +1,8 @@
-const Approach = require("#shared/Approaches/Approach.js");
+const Approach = require("#shared/Classes/Approach.js");
 const UserError = require("./modules/UserError.js");
 const logger = require("#src/Logger.js");
-const { Client, GatewayIntentBits, ActivityType, Collection, EmbedBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, ActivityType, Collection } = require("discord.js");
+const CustomEmbed = require("./modules/CustomEmbed.js");
 const safeDiscord = require("./modules/SafeDiscord.js");
 const fs = require('fs');
 const { Routes } = require('discord-api-types/v9');
@@ -165,9 +166,16 @@ class DiscordApproach extends Approach {
         const command_list = [];
 
         for (const file of commandFiles) {
+            /**
+             * @type {import("./modules/DiscordCommand.js")}
+             */
             const command = require(`./commands/${file}`);
+            if(this.config.prefix){
+                command.name = this.config.prefix + command.name;
+            }
+            command.approach = this;
             this.commands.set(command.name, command);
-            command_list.push(command);
+            command_list.push(command.getProperties());
         }
 
         const rest = new REST({ version: '10' }).setToken(this.config.token);
@@ -195,7 +203,7 @@ class DiscordApproach extends Approach {
                         error_message = `\`\`\`${e?.message || "Unknown error."}\`\`\``;
                     }
 
-                    let embed = new EmbedBuilder();
+                    let embed = new CustomEmbed();
 
                     embed
                         .setTitle('Failed to execute your command!')
