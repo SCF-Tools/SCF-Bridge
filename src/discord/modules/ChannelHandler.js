@@ -1,5 +1,5 @@
 const { TextChannel } = require("discord.js");
-const DiscordApproach = require("../DiscordApproach");
+const DiscordApproach = require("../DiscordApproach.js");
 
 class ChannelHandler {
     /**

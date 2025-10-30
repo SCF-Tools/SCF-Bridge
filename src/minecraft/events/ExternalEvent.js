@@ -1,4 +1,3 @@
-const UserError = require("#src/discord/modules/UserError.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 const MessageGuildEvent = require("#root/shared/Events/MessageGuildEvent.js");
 const MessageOfficerEvent = require("#root/shared/Events/MessageOfficerEvent.js");
