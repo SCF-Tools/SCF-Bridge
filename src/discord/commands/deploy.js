@@ -34,7 +34,7 @@ class DeployCommand extends DiscordCommand {
 
         let response = new CustomEmbed()
             .setColor(0x008000)
-            .setTitle("Deploy is scheduled...")
+            .setTitle("Bridge Deploy")
             .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`)
 
         await interaction.followUp({ embeds: [response] });

@@ -34,7 +34,7 @@ class DemoteCommand extends DiscordCommand {
 
         let response = new CustomEmbed()
             .setColor(0x008000)
-            .setTitle("Successfully demoted")
+            .setTitle("Guild Demotion")
             .setDescription(`The command to demote \`${nick}\` was sent.`)
             
         await interaction.followUp({ embeds: [response] });
