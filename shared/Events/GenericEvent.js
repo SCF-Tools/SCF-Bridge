@@ -1,10 +1,10 @@
-class GenericEvent{
+class GenericEvent {
     emitter_id;
-    type = "generic";
+    type = 'generic';
 
     payload = {};
 
-    constructor(emitter_id){
+    constructor(emitter_id) {
         this.emitter_id = emitter_id;
     }
 }

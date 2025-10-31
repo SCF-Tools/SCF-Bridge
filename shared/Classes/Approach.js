@@ -1,7 +1,7 @@
-const logger = require("#src/Logger.js");
-const GenericEvent = require("#shared/Events/GenericEvent.js");
+const logger = require('#src/Logger.js');
+const GenericEvent = require('#shared/Events/GenericEvent.js');
 
-class Approach{
+class Approach {
     id;
     type;
     /**
@@ -11,42 +11,41 @@ class Approach{
 
     enabled = false;
 
-    constructor(type, id){
+    constructor(type, id) {
         this.type = type;
         this.id = id;
     }
-    
-    setApplication(application){
+
+    setApplication(application) {
         this.#app = application;
     }
-    
+
     /**
-     * @param {GenericEvent} event 
+     * @param {GenericEvent} event
      */
-    async emitEvent(event){
-        if(!this.enabled){
+    async emitEvent(event) {
+        if (!this.enabled) {
             return;
         }
-        
-        if(!this.#app){
+
+        if (!this.#app) {
             logger.error(`No application defined at approach "${this.id}".`);
             return;
         }
 
-        try{
+        try {
             await this.#app.routeEvent(event);
-        }
-        catch(e){
+        } catch (e) {
             logger.error(`Failed to emit event!`, event);
             console.log(e);
         }
     }
 
     /**
-     * @param {GenericEvent} event 
+     * @param {GenericEvent} event
      */
-    async handleEvent(event){
-        throw new Error("Event handling was not implemented.")
+    async handleEvent(event) {
+        throw new Error('Event handling was not implemented.');
     }
 }
 

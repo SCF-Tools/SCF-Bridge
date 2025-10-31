@@ -1,4 +1,4 @@
-const DiscordConsoleEvent = require("#shared/Events/DiscordConsoleEvent.js");
+const DiscordConsoleEvent = require('#shared/Events/DiscordConsoleEvent.js');
 
 /**
  * @typedef {Object} ChatMessage
@@ -33,10 +33,17 @@ class MessageManager {
         const cleanMessage = message.toString();
         const coloredMessage = message.toMotd();
 
-        this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch(e => { console.log(e) });
+        this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch((e) => {
+            console.log(e);
+        });
 
-        if (cleanMessage.includes(' the lobby!') && cleanMessage.includes('[MVP+')) {
-            this.minecraft.bot.chat("/limbo");
+        if (cleanMessage.includes(' the lobby!') && cleanMessage.includes('[MVP+') && !cleanMessage.includes(':')) {
+            this.minecraft.bot.chat('/limbo');
+            return;
+        }
+        if (cleanMessage.includes('You are currently connected to') && !cleanMessage.includes(':')) {
+            this.minecraft.bot.chat('/limbo');
+            return;
         }
     }
 }
