@@ -1,9 +1,6 @@
-const { TextChannel } = require("discord.js");
-const DiscordApproach = require("../DiscordApproach.js");
-
 class ChannelHandler {
     /**
-     * @type {DiscordApproach}
+     * @type {import("../DiscordApproach.js")}
      */
     discord;
 
@@ -12,7 +9,7 @@ class ChannelHandler {
     }
 
     /**
-     * @returns {TextChannel}
+     * @returns {import("discord.js").TextChannel}
      */
     get(channel_type) {
         let id = this.discord.config.channels?.[channel_type] ?? channel_type;

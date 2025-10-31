@@ -69,7 +69,7 @@ class Mojang {
             }
             catch (e) {
                 if (e instanceof axios.AxiosError) {
-                    if (["404", "400"].includes(e.status)) {
+                    if ([404, 400].includes(e.status)) {
                         return response;
                     }
                 }

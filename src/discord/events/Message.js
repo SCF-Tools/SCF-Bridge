@@ -105,7 +105,7 @@ class MessageManager {
                     embeds: [
                         {
                             color: 0x800000,
-                            description: `In order to use the bridge, please link your account using the \`/${this.discord.config.prefix}link\` command.\nIt is required to match your Discord account to your Hypixel account.`
+                            description: `In order to use the bridge, please link your account using the \`/${this.discord.config.prefix || ""}link\` command.\nIt is required to match your Discord account to your Hypixel account.`
                         }
                     ]
                 });

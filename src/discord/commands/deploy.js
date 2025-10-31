@@ -2,6 +2,7 @@ const DiscordCommand = require("../modules/DiscordCommand.js");
 const CustomEmbed = require("../modules/CustomEmbed.js");
 const Permissions = require("../modules/PermissionManager.js");
 const { execSync } = require('child_process');
+const logger = require("#root/src/Logger.js");
 
 class DeployCommand extends DiscordCommand {
     name = "deploy";

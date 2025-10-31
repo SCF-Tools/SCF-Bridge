@@ -1,13 +1,12 @@
 const logger = require("#src/Logger.js");
 const banlists = require("#shared/API/Banlists.js");
-const SCFApproach = require("../SCFApproach.js");
 const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
 
 const { exec, execSync } = require('node:child_process');
 
 class LongpollManager {
     /**
-     * @type {SCFApproach}
+     * @type {import("../SCFApproach.js")}
      */
     scf;
 
@@ -89,8 +88,6 @@ class LongpollManager {
                     const uuid = act_data.uuid;
 
                     let banlist = await banlists.check(uuid);
-
-                    console.log(banlist);
 
                     if (!banlist.banned) {
                         let command = `/guild invite ${username}`;
