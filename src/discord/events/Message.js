@@ -122,7 +122,7 @@ class MessageManager {
 
             // Debug Messages
             if (message.channel.id === this.discord.config.channels.console) {
-                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.COUNCIL, true);
+                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.OWNER, true);
                 if (!can_execute) {
                     message.react('❌');
                     return;

@@ -104,7 +104,7 @@ class Config {
                         '766041783137468506' // SBU Administrator
                     ]
                 },
-                COUNCIL: {
+                OWNER: {
                     name: 'Council',
                     level: 3,
                     roles: [

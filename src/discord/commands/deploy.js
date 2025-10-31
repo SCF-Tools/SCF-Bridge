@@ -13,7 +13,7 @@ class DeployCommand extends DiscordCommand {
      * @param {import("discord.js").CommandInteraction} interaction
      */
     async execute(interaction) {
-        Permissions.canExecute(interaction.member, Permissions.tiers.ADMINISTRATOR);
+        Permissions.canExecute(interaction.member, Permissions.tiers.OWNER);
 
         function updateCode() {
             try {
