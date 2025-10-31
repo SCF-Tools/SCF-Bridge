@@ -1,8 +1,8 @@
 // Credits https://github.com/Altpapier/hypixel-discord-guild-bridge/blob/master/helper/messageToImage.js
 
 const { GlobalFonts, createCanvas, loadImage } = require('@napi-rs/canvas');
-GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', "Minecraft");
-GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', "MinecraftUnicode");
+GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', "BridgeMinecraft");
+GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', "BridgeMinecraftUnicode");
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -32,7 +32,7 @@ function getHeight(message) {
     }
     const splitMessage = splitMessageSpace.join(' ').split(/§|\n/g);
     splitMessage.shift();
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = '40px BridgeMinecraft, BridgeMinecraftUnicode';
 
     let width = 5;
     let height = 35;
@@ -63,7 +63,7 @@ async function generateMessageImage(message) {
     ctx.shadowOffsetX = 4;
     ctx.shadowOffsetY = 4;
     ctx.shadowColor = '#131313';
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = '40px BridgeMinecraft, BridgeMinecraftUnicode';
 
     let width = 5;
     let height = 35;
