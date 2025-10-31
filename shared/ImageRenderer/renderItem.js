@@ -1,10 +1,10 @@
 // Credits https://github.com/Altpapier/hypixel-discord-guild-bridge/blob/master/helper/loreRenderer.js
 const Canvas = require('@napi-rs/canvas');
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/2_Minecraft-Italic.otf', "BridgeMinecraftItalic");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', "BridgeMinecraft");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/minecraft-bold.otf', "BridgeMinecraftBold");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', "BridgeMinecraftUnicode");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/Monocraft.ttf', "BridgeMonocraft");
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/2_Minecraft-Italic.otf', 'BridgeMinecraftItalic');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', 'BridgeMinecraft');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/minecraft-bold.otf', 'BridgeMinecraftBold');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', 'BridgeMinecraftUnicode');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/Monocraft.ttf', 'BridgeMonocraft');
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -92,7 +92,7 @@ async function renderLore(itemName, lore, monospace = false) {
         }
     }
 
-    return canvas.toBuffer("image/png");
+    return canvas.toBuffer('image/png');
 }
 
 module.exports = { renderLore };

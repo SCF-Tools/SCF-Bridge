@@ -1,14 +1,14 @@
-const GenericEvent = require("./GenericEvent.js");
+const GenericEvent = require('./GenericEvent.js');
 
-class MinecraftRawEvent extends GenericEvent{
+class MinecraftRawEvent extends GenericEvent {
     emitter_id;
-    type = "minecraft_raw";
+    type = 'minecraft_raw';
 
     payload = {
-        message: "",
+        message: ''
     };
 
-    constructor(emitter_id, message){
+    constructor(emitter_id, message) {
         super(emitter_id);
 
         this.emitter_id = emitter_id;

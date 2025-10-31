@@ -1,12 +1,12 @@
-const MinecraftRawEvent = require("#root/shared/Events/MinecraftRawEvent.js");
-const DiscordCommand = require("../modules/DiscordCommand.js");
-const UserError = require("../modules/UserError.js");
-const CustomEmbed = require("../modules/CustomEmbed.js");
-const Permissions = require("../modules/PermissionManager.js");
+const MinecraftRawEvent = require('#root/shared/Events/MinecraftRawEvent.js');
+const DiscordCommand = require('../modules/DiscordCommand.js');
+const UserError = require('../modules/UserError.js');
+const CustomEmbed = require('../modules/CustomEmbed.js');
+const Permissions = require('../modules/PermissionManager.js');
 
 class KickCommand extends DiscordCommand {
-    name = "kick";
-    description = "Kicks player from the guild.";
+    name = 'kick';
+    description = 'Kicks player from the guild.';
     options = [
         {
             name: 'nick',
@@ -23,15 +23,16 @@ class KickCommand extends DiscordCommand {
     ];
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction 
+     * @param {import("discord.js").CommandInteraction} interaction
      */
-    async execute(interaction){
+    async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.MODERATOR);
 
         let nick = interaction.options.getString('nick');
-        let reason = interaction.options.getString('reason') || "You can rejoin the guild by using the /g join command.";
+        let reason =
+            interaction.options.getString('reason') || 'You can rejoin the guild by using the /g join command.';
         if (!nick) {
-            throw new UserError("The nick cannot be empty.");
+            throw new UserError('The nick cannot be empty.');
         }
 
         let command = `/g kick ${nick} ${reason}`;
@@ -41,9 +42,9 @@ class KickCommand extends DiscordCommand {
 
         let response = new CustomEmbed()
             .setColor(0x008000)
-            .setTitle("Guild Kick")
-            .setDescription(`The command to kick \`${nick}\` was sent.`)
-            
+            .setTitle('Guild Kick')
+            .setDescription(`The command to kick \`${nick}\` was sent.`);
+
         await interaction.followUp({ embeds: [response] });
     }
 }

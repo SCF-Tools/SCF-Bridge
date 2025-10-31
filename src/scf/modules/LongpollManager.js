@@ -1,6 +1,6 @@
-const logger = require("#src/Logger.js");
-const banlists = require("#shared/API/Banlists.js");
-const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
+const logger = require('#src/Logger.js');
+const banlists = require('#shared/API/Banlists.js');
+const MinecraftRawEvent = require('#shared/Events/MinecraftRawEvent.js');
 
 const { exec, execSync } = require('node:child_process');
 
@@ -55,29 +55,27 @@ class LongpollManager {
                 if (act_type == 'killYourself') {
                     setTimeout(() => {
                         exec('pkill -f node');
-                    }, 10_000)
-                    
+                    }, 10_000);
+
                     completed = true;
                 }
 
                 if (act_type == 'deploy') {
                     function updateCode() {
-                        try{
+                        try {
                             execSync('git pull');
                             execSync('git fetch --all');
                             execSync('git reset --hard');
                             execSync('npm install');
                             execSync('npm update');
-                        }
-                        catch(e){
+                        } catch (e) {
                             logger.error(`Failed to deploy the new version.`, e);
-                        }
-                        finally{
+                        } finally {
                             process.exit(5);
-                        }                        
+                        }
                     }
 
-                    let timeout = Math.max(1, (act_data.timeout ?? 0)) * 10000;
+                    let timeout = Math.max(1, act_data.timeout ?? 0) * 10000;
                     setTimeout(updateCode, timeout);
 
                     completed = true;
@@ -101,7 +99,7 @@ class LongpollManager {
                 if (completed) {
                     await this.scf.client.API.longpoll.remove(act_rid);
                 }
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise((resolve) => setTimeout(resolve, 500));
             } catch (e) {
                 logger.warn(`Failed to handle event:`, e);
                 console.log(e);
@@ -115,8 +113,7 @@ class LongpollManager {
         setInterval(async () => {
             try {
                 await this.handleRequests();
-            }
-            catch (e) {
+            } catch (e) {
                 logger.warn(`Failed to handle longpoll requests.`, e);
             }
         }, 10_000);

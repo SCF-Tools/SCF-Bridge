@@ -1,8 +1,8 @@
 // Credits https://github.com/Altpapier/hypixel-discord-guild-bridge/blob/master/helper/messageToImage.js
 
 const { GlobalFonts, createCanvas, loadImage } = require('@napi-rs/canvas');
-GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', "BridgeMinecraft");
-GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', "BridgeMinecraftUnicode");
+GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', 'BridgeMinecraft');
+GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', 'BridgeMinecraftUnicode');
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -82,7 +82,7 @@ async function generateMessageImage(message) {
         ctx.fillText(currentMessage, width, height);
         width += ctx.measureText(currentMessage).width;
     }
-    return canvas.toBuffer("image/png");
+    return canvas.toBuffer('image/png');
 }
 
 module.exports = generateMessageImage;

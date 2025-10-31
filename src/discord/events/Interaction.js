@@ -1,4 +1,4 @@
-const logger = require("#src/Logger.js");
+const logger = require('#src/Logger.js');
 
 class InteractionManager {
     /**
@@ -11,7 +11,7 @@ class InteractionManager {
     }
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction 
+     * @param {import("discord.js").CommandInteraction} interaction
      */
     async handle(interaction) {
         if (interaction.isChatInputCommand()) {

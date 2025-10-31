@@ -1,26 +1,26 @@
-const Approach = require("#shared/Classes/Approach.js");
-const UserError = require("./modules/UserError.js");
-const logger = require("#src/Logger.js");
-const { Client, GatewayIntentBits, ActivityType, Collection } = require("discord.js");
-const CustomEmbed = require("./modules/CustomEmbed.js");
-const safeDiscord = require("./modules/SafeDiscord.js");
+const Approach = require('#shared/Classes/Approach.js');
+const UserError = require('./modules/UserError.js');
+const logger = require('#src/Logger.js');
+const { Client, GatewayIntentBits, ActivityType, Collection } = require('discord.js');
+const CustomEmbed = require('./modules/CustomEmbed.js');
+const safeDiscord = require('./modules/SafeDiscord.js');
 const fs = require('fs');
 const { Routes } = require('discord-api-types/v9');
 const { REST } = require('@discordjs/rest');
 
-const MessageManager = require("./events/Message.js");
-const InteractionManager = require("./events/Interaction.js");
-const ChannelHandler = require("./modules/ChannelHandler.js");
-const ExternalEventManager = require("./events/ExternalEvent.js");
+const MessageManager = require('./events/Message.js');
+const InteractionManager = require('./events/Interaction.js');
+const ChannelHandler = require('./modules/ChannelHandler.js');
+const ExternalEventManager = require('./events/ExternalEvent.js');
 
 class DiscordApproach extends Approach {
-    /** 
+    /**
      * @typedef {Object} DiscordChannels
      * @property {?string} guild
      * @property {?string} officer
      * @property {?string} events
      * @property {?string} console
-     * 
+     *
      * @typedef {Object} DiscordConfig
      * @property {?string} approach_id
      * @property {?string} token
@@ -43,11 +43,11 @@ class DiscordApproach extends Approach {
      */
     channels;
     /**
-     * @type {MessageManager} 
+     * @type {MessageManager}
      */
     messageManager;
     /**
-     * @type {InteractionManager} 
+     * @type {InteractionManager}
      */
     interactionManager;
     /**
@@ -55,12 +55,12 @@ class DiscordApproach extends Approach {
      */
     externalEventManager;
     /**
-     * @type {Collection} 
+     * @type {Collection}
      */
     commands;
 
     constructor(approach_id, config) {
-        super("discord", approach_id);
+        super('discord', approach_id);
 
         this.config.approach_id = approach_id;
         this.config.token = config.token;
@@ -71,7 +71,7 @@ class DiscordApproach extends Approach {
             guild: config?.channels?.guild,
             officer: config?.channels?.officer,
             events: config?.channels?.events,
-            console: config?.channels?.console,
+            console: config?.channels?.console
         };
 
         this.channels = new ChannelHandler(this);
@@ -87,7 +87,7 @@ class DiscordApproach extends Approach {
                 reject(`Failed to setup the ${this.id} approach in 60 seconds.`);
             }, 60_000);
 
-            if(!this.config.token){
+            if (!this.config.token) {
                 reject(`Approach ${this.id} is not configured.`);
                 return;
             }
@@ -106,7 +106,9 @@ class DiscordApproach extends Approach {
                 resolve();
 
                 clearTimeout(timeout);
-                logger.success(`Successfully logged in on "${this.id}" approach with client "${this.client.user.tag}"!`);
+                logger.success(
+                    `Successfully logged in on "${this.id}" approach with client "${this.client.user.tag}"!`
+                );
                 this.startOperation();
             });
 
@@ -119,29 +121,29 @@ class DiscordApproach extends Approach {
     async startOperation() {
         try {
             this.client.user.setPresence({
-                activities: [{
-                    name: `your guild bridge!`,
-                    type: ActivityType.Watching
-                }]
+                activities: [
+                    {
+                        name: `your guild bridge!`,
+                        type: ActivityType.Watching
+                    }
+                ]
             });
 
-            let guild_channel = this.channels.get("guild");
+            let guild_channel = this.channels.get('guild');
             if (guild_channel) {
                 await safeDiscord.send(guild_channel, {
                     embeds: [
                         {
-                            title: "The bridge is online!",
+                            title: 'The bridge is online!',
                             color: 0x008000
                         }
                     ]
                 });
-            }
-            else logger.error(`Channel "guild" not found on ${this.id}!`);
+            } else logger.error(`Channel "guild" not found on ${this.id}!`);
 
             await this.registerMessageHandler();
             await this.registerCommandHandler();
-        }
-        catch (e) {
+        } catch (e) {
             logger.error(`Failed to bring the approach ${this.id} to normal operation.`, e);
             this.enabled = false;
         }
@@ -151,8 +153,7 @@ class DiscordApproach extends Approach {
         this.client.on('messageCreate', async (message) => {
             try {
                 await this.messageManager.handle(message);
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
             }
         });
@@ -170,7 +171,7 @@ class DiscordApproach extends Approach {
              * @type {import("./modules/DiscordCommand.js")}
              */
             const command = require(`./commands/${file}`);
-            if(this.config.prefix){
+            if (this.config.prefix) {
                 command.name = this.config.prefix + command.name;
             }
             command.approach = this;
@@ -184,41 +185,36 @@ class DiscordApproach extends Approach {
 
         try {
             await rest.put(Routes.applicationGuildCommands(clientID, this.config.server), { body: command_list });
-        }
-        catch (e) {
+        } catch (e) {
             logger.error(`Encountered an error while registering commands`, e);
         }
 
         this.client.on('interactionCreate', async (interaction) => {
             try {
                 await this.interactionManager.handle(interaction);
-            }
-            catch (e) {
+            } catch (e) {
                 logger.warn(`Error while handling the command...`, e);
                 try {
                     const errorStack = (e.stack ?? e ?? 'Unknown').toString().slice(0, 1000);
-                    let error_message = `Error message:\n\`\`\`${e?.message || "Unknown error."}\`\`\`\nError stack:\n\`\`\`${errorStack}\`\`\``;
+                    let error_message = `Error message:\n\`\`\`${e?.message || 'Unknown error.'}\`\`\`\nError stack:\n\`\`\`${errorStack}\`\`\``;
 
                     if (e instanceof UserError) {
-                        error_message = `\`\`\`${e?.message || "Unknown error."}\`\`\``;
+                        error_message = `\`\`\`${e?.message || 'Unknown error.'}\`\`\``;
                     }
 
                     let embed = new CustomEmbed();
 
-                    embed
-                        .setTitle('Failed to execute your command!')
-                        .setDescription(error_message)
-                        .setColor(0x800000);
+                    embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(0x800000);
 
                     await interaction.editReply({ embeds: [embed] });
                 } catch (err) {
-                    logger.error(`Failed to respond with error message.`, err)
+                    logger.error(`Failed to respond with error message.`, err);
                 }
             }
         });
     }
 
-    async handleEvent(event){
+    async handleEvent(event) {
         await this.externalEventManager.handle(event);
     }
 }

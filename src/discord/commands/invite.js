@@ -1,12 +1,12 @@
-const MinecraftRawEvent = require("#root/shared/Events/MinecraftRawEvent.js");
-const DiscordCommand = require("../modules/DiscordCommand.js");
-const UserError = require("../modules/UserError.js");
-const CustomEmbed = require("../modules/CustomEmbed.js");
-const Permissions = require("../modules/PermissionManager.js");
+const MinecraftRawEvent = require('#root/shared/Events/MinecraftRawEvent.js');
+const DiscordCommand = require('../modules/DiscordCommand.js');
+const UserError = require('../modules/UserError.js');
+const CustomEmbed = require('../modules/CustomEmbed.js');
+const Permissions = require('../modules/PermissionManager.js');
 
 class InviteCommand extends DiscordCommand {
-    name = "invite";
-    description = "Invites player to the guild.";
+    name = 'invite';
+    description = 'Invites player to the guild.';
     options = [
         {
             name: 'nick',
@@ -17,14 +17,14 @@ class InviteCommand extends DiscordCommand {
     ];
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction 
+     * @param {import("discord.js").CommandInteraction} interaction
      */
-    async execute(interaction){
+    async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.MODERATOR);
 
         let nick = interaction.options.getString('nick');
         if (!nick) {
-            throw new UserError("The nick cannot be empty.");
+            throw new UserError('The nick cannot be empty.');
         }
 
         let command = `/g invite ${nick}`;
@@ -34,9 +34,9 @@ class InviteCommand extends DiscordCommand {
 
         let response = new CustomEmbed()
             .setColor(0x008000)
-            .setTitle("Guild Invite")
-            .setDescription(`The command to invite \`${nick}\` was sent.`)
-            
+            .setTitle('Guild Invite')
+            .setDescription(`The command to invite \`${nick}\` was sent.`);
+
         await interaction.followUp({ embeds: [response] });
     }
 }

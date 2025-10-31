@@ -9,14 +9,14 @@ class DiscordCommand {
     options;
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction 
+     * @param {import("discord.js").CommandInteraction} interaction
      */
-    async execute(interaction){
+    async execute(interaction) {
         throw new Error(`Discord command "${this.name}" does not have an execute method implemented.`);
     }
 
-    getProperties(){
-        return{
+    getProperties() {
+        return {
             name: this.name,
             description: this.description,
             options: this.options

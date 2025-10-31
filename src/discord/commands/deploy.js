@@ -1,16 +1,16 @@
-const DiscordCommand = require("../modules/DiscordCommand.js");
-const CustomEmbed = require("../modules/CustomEmbed.js");
-const Permissions = require("../modules/PermissionManager.js");
+const DiscordCommand = require('../modules/DiscordCommand.js');
+const CustomEmbed = require('../modules/CustomEmbed.js');
+const Permissions = require('../modules/PermissionManager.js');
 const { execSync } = require('child_process');
-const logger = require("#root/src/Logger.js");
+const logger = require('#root/src/Logger.js');
 
 class DeployCommand extends DiscordCommand {
-    name = "deploy";
-    description = "Manually updates the bridge to use the latest version from GitHub.";
+    name = 'deploy';
+    description = 'Manually updates the bridge to use the latest version from GitHub.';
     options = [];
 
     /**
-     * @param {import("discord.js").CommandInteraction} interaction 
+     * @param {import("discord.js").CommandInteraction} interaction
      */
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.ADMINISTRATOR);
@@ -22,11 +22,9 @@ class DeployCommand extends DiscordCommand {
                 execSync('git reset --hard');
                 execSync('npm install');
                 execSync('npm update');
-            }
-            catch (e) {
+            } catch (e) {
                 logger.error(`Failed to deploy the new version.`, e);
-            }
-            finally {
+            } finally {
                 process.exit(5);
             }
         }
@@ -35,8 +33,8 @@ class DeployCommand extends DiscordCommand {
 
         let response = new CustomEmbed()
             .setColor(0x008000)
-            .setTitle("Bridge Deploy")
-            .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`)
+            .setTitle('Bridge Deploy')
+            .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`);
 
         await interaction.followUp({ embeds: [response] });
     }

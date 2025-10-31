@@ -1,13 +1,13 @@
-const cache = require("#shared/CacheManager.js");
-const config = require("#root/Config.js").get();
-const Mojang = require("#shared/API/Mojang.js");
-const Hypixel = require("#shared/API/Hypixel.js");
+const cache = require('#shared/CacheManager.js');
+const config = require('#root/Config.js').get();
+const Mojang = require('#shared/API/Mojang.js');
+const Hypixel = require('#shared/API/Hypixel.js');
 
-const MinecraftRawEvent = require("#shared/Events/MinecraftRawEvent.js");
-const MessageGuildEvent = require("#shared/Events/MessageGuildEvent.js");
-const MessageOfficerEvent = require("#shared/Events/MessageOfficerEvent.js");
+const MinecraftRawEvent = require('#shared/Events/MinecraftRawEvent.js');
+const MessageGuildEvent = require('#shared/Events/MessageGuildEvent.js');
+const MessageOfficerEvent = require('#shared/Events/MessageOfficerEvent.js');
 
-const Permissions = require("../modules/PermissionManager.js");
+const Permissions = require('../modules/PermissionManager.js');
 
 class MessageManager {
     /**
@@ -20,20 +20,20 @@ class MessageManager {
     }
 
     /**
-     * 
-     * @param {import("discord.js").GuildMember} member 
+     *
+     * @param {import("discord.js").GuildMember} member
      */
     async screenPlayer(member) {
         let player_info = {
             display_name: member.nickname,
             user: {
                 uuid: null,
-                guild_id: null,
+                guild_id: null
             },
             issues: {
                 not_linked: false,
-                bridgelocked: false,
-            },
+                bridgelocked: false
+            }
         };
 
         if (member.user.bot) {
@@ -72,18 +72,19 @@ class MessageManager {
 
         if (player_info.user.uuid) {
             try {
-                let guild_info = await Hypixel.fetch(`https://api.hypixel.net/v2/guild?player=${player_info.user.uuid}`);
+                let guild_info = await Hypixel.fetch(
+                    `https://api.hypixel.net/v2/guild?player=${player_info.user.uuid}`
+                );
 
                 player_info.user.guild_id = guild_info?.guild?._id;
-            }
-            catch (e) { }
+            } catch (e) {}
         }
 
         return player_info;
     }
 
     /**
-     * @param {import("discord.js").Message} message 
+     * @param {import("discord.js").Message} message
      */
     async handle(message) {
         try {
@@ -105,7 +106,7 @@ class MessageManager {
                     embeds: [
                         {
                             color: 0x800000,
-                            description: `In order to use the bridge, please link your account using the \`/${this.discord.config.prefix || ""}link\` command.\nIt is required to match your Discord account to your Hypixel account.`
+                            description: `In order to use the bridge, please link your account using the \`/${this.discord.config.prefix || ''}link\` command.\nIt is required to match your Discord account to your Hypixel account.`
                         }
                     ]
                 });
@@ -113,7 +114,7 @@ class MessageManager {
             }
 
             if (playerInfo.issues.bridgelocked) {
-                await message.react('🚫').catch((e) => { });
+                await message.react('🚫').catch((e) => {});
                 return;
             }
 
@@ -123,7 +124,7 @@ class MessageManager {
             if (message.channel.id === this.discord.config.channels.console) {
                 let can_execute = Permissions.canExecute(message.member, Permissions.tiers.COUNCIL, true);
                 if (!can_execute) {
-                    message.react("❌");
+                    message.react('❌');
                     return;
                 }
 
@@ -135,31 +136,38 @@ class MessageManager {
             if (message.channel.id === this.discord.config.channels.officer) {
                 let can_execute = Permissions.canExecute(message.member, Permissions.tiers.MODERATOR, true);
                 if (!can_execute) {
-                    message.react("❌");
+                    message.react('❌');
                     return;
                 }
 
-                let event = new MessageOfficerEvent(this.discord.id, {
-                    display_name: playerInfo.display_name,
-                    uuid: playerInfo.user.uuid,
-                    guild_id: playerInfo.user.guild_id
-                }, cleaned_message);
+                let event = new MessageOfficerEvent(
+                    this.discord.id,
+                    {
+                        display_name: playerInfo.display_name,
+                        uuid: playerInfo.user.uuid,
+                        guild_id: playerInfo.user.guild_id
+                    },
+                    cleaned_message
+                );
                 this.discord.emitEvent(event);
                 return;
             }
 
             if (message.channel.id === this.discord.config.channels.guild) {
-                let event = new MessageGuildEvent(this.discord.id, {
-                    display_name: playerInfo.display_name,
-                    uuid: playerInfo.user.uuid,
-                    guild_id: playerInfo.user.guild_id
-                }, cleaned_message);
+                let event = new MessageGuildEvent(
+                    this.discord.id,
+                    {
+                        display_name: playerInfo.display_name,
+                        uuid: playerInfo.user.uuid,
+                        guild_id: playerInfo.user.guild_id
+                    },
+                    cleaned_message
+                );
                 this.discord.emitEvent(event);
                 return;
             }
-        }
-        catch (e) {
-            await message.react("❗").catch(e => { });
+        } catch (e) {
+            await message.react('❗').catch((e) => {});
             console.log(e);
         }
     }

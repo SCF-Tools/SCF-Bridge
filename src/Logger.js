@@ -1,4 +1,4 @@
-const chalk = require("chalk");
+const chalk = require('chalk');
 
 module.exports = {
     print(prefix, message, raw = null) {
@@ -9,34 +9,18 @@ module.exports = {
     },
 
     info(message, raw = null) {
-        this.print(
-            chalk.inverse(" Info "),
-            chalk.whiteBright(message),
-            raw
-        );
+        this.print(chalk.inverse(' Info '), chalk.whiteBright(message), raw);
     },
 
     warn(message, raw = null) {
-        this.print(
-            chalk.bgYellowBright.whiteBright(" Warn "),
-            chalk.yellowBright(message),
-            raw
-        );
+        this.print(chalk.bgYellowBright.whiteBright(' Warn '), chalk.yellowBright(message), raw);
     },
 
     success(message, raw = null) {
-        this.print(
-            chalk.bgGreenBright.whiteBright(" Success "),
-            chalk.greenBright(message),
-            raw
-        );
+        this.print(chalk.bgGreenBright.whiteBright(' Success '), chalk.greenBright(message), raw);
     },
 
     error(message, raw = null) {
-        this.print(
-            chalk.bgRedBright.whiteBright(" Error "),
-            chalk.redBright(message),
-            raw
-        );
-    },
+        this.print(chalk.bgRedBright.whiteBright(' Error '), chalk.redBright(message), raw);
+    }
 };

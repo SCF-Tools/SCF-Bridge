@@ -1,16 +1,16 @@
-const GenericEvent = require("./GenericEvent.js");
+const GenericEvent = require('./GenericEvent.js');
 
-class DiscordConsoleEvent extends GenericEvent{
+class DiscordConsoleEvent extends GenericEvent {
     emitter_id;
-    type = "discord_console";
+    type = 'discord_console';
 
     payload = {
-        message: "",
+        message: ''
     };
 
-    constructor(emitter_id, message){
+    constructor(emitter_id, message) {
         super(emitter_id);
-        
+
         this.emitter_id = emitter_id;
         this.payload.message = message;
     }
