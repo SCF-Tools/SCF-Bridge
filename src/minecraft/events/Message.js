@@ -1,21 +1,5 @@
 const DiscordConsoleEvent = require('#shared/Events/DiscordConsoleEvent.js');
 
-/**
- * @typedef {Object} ChatMessage
- * @property {any} json
- * @property {Function} append
- * @property {Function} clone
- * @property {Object[]} [extra]
- * @property {string} [translate]
- * @property {Function} toString
- * @property {Function} toMotd
- * @property {Function} toAnsi
- * @property {Function} toHTML
- * @property {Function} length
- * @property {Function} getText
- * @property {Function} valueOf
- */
-
 class MessageManager {
     /**
      * @type {import("../MinecraftApproach")}
@@ -26,11 +10,14 @@ class MessageManager {
         this.minecraft = minecraft_instance;
     }
 
-    /**
-     * @param {ChatMessage} message
-     */
     async handle(message) {
+        /**
+         * @type {String}
+         */
         const cleanMessage = message.toString();
+        /**
+         * @type {String}
+         */
         const coloredMessage = message.toMotd();
 
         this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch((e) => {
@@ -44,6 +31,21 @@ class MessageManager {
         if (cleanMessage.includes('You are currently connected to') && !cleanMessage.includes(':')) {
             this.minecraft.bot.chat('/limbo');
             return;
+        }
+
+        const patterns = {
+            player_join: /^Guild > [^:]* joined\.$/gmi,
+            player_leave: /^Guild > [^:]* left\.$/gmi,
+        };
+
+        if (patterns.player_join.test(cleanMessage)) {
+            const nick = cleanMessage.split(" ")[2];
+            console.log(nick);
+        }
+
+        if (patterns.player_leave.test(cleanMessage)) {
+            const nick = cleanMessage.split(" ")[2];
+            console.log(nick);
         }
     }
 }

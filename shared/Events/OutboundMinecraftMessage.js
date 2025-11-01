@@ -1,8 +1,8 @@
 const GenericEvent = require('./GenericEvent.js');
 
-class DiscordConsoleEvent extends GenericEvent {
+class OutboundMinecraftMessage extends GenericEvent {
     emitter_id;
-    type = 'discord_console';
+    type = 'outbound_minecraft_message';
 
     payload = {
         message: ''
@@ -16,4 +16,4 @@ class DiscordConsoleEvent extends GenericEvent {
     }
 }
 
-module.exports = DiscordConsoleEvent;
+module.exports = OutboundMinecraftMessage;

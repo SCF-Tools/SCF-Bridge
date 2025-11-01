@@ -1,4 +1,4 @@
-const MinecraftRawEvent = require('#root/shared/Events/MinecraftRawEvent.js');
+const OutboundMinecraftMessage = require('#root/shared/Events/OutboundMinecraftMessage.js');
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
@@ -31,7 +31,7 @@ class ExecuteCommand extends DiscordCommand {
             command = '/' + command;
         }
 
-        let event = new MinecraftRawEvent(this.approach.id, command);
+        let event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
         let response = new CustomEmbed()
