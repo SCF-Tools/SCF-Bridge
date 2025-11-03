@@ -1,6 +1,6 @@
-const DiscordConsoleEvent = require("#shared/Events/DiscordConsoleEvent.js");
-const { AttachmentBuilder } = require("discord.js");
-const messageToImage = require("#shared/ImageRenderer/messageToImage.js");
+const DiscordConsoleEvent = require('#shared/Events/DiscordConsoleEvent.js');
+const { AttachmentBuilder } = require('discord.js');
+const messageToImage = require('#shared/ImageRenderer/messageToImage.js');
 
 class ExternalEventManager {
     /**
@@ -13,23 +13,20 @@ class ExternalEventManager {
     }
 
     /**
-     * @param {import("#shared/Events/GenericEvent.js")} event 
+     * @param {import("#shared/Events/GenericEvent.js")} event
      */
     async handle(event) {
         if (event instanceof DiscordConsoleEvent) {
-            const console_channel = this.discord.channels.get("console");
+            const console_channel = this.discord.channels.get('console');
 
             await console_channel.send({
                 files: [
-                    new AttachmentBuilder(
-                        await messageToImage(event.payload.message), {
-                            name: `message.png`
-                        }
-                    )
+                    new AttachmentBuilder(await messageToImage(event.payload.message), {
+                        name: `message.png`
+                    })
                 ]
             });
         }
-
     }
 }
 

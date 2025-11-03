@@ -1,8 +1,8 @@
-const Approach = require("#shared/Approaches/Approach.js");
-const logger = require("#src/Logger.js");
+const Approach = require('#shared/Classes/Approach.js');
+const logger = require('#src/Logger.js');
 
-const MessageManager = require("./events/Message.js");
-const ExternalEventManager = require("./events/ExternalEvent.js");
+const MessageManager = require('./events/Message.js');
+const ExternalEventManager = require('./events/ExternalEvent.js');
 
 const mineflayer = require('mineflayer');
 
@@ -17,37 +17,46 @@ class MinecraftApproach extends Approach {
     bot;
 
     /**
-     * @type {MessageManager} 
+     * @type {MessageManager}
      */
     messageManager;
     /**
-     * @type {ExternalEventManager} 
+     * @type {ExternalEventManager}
      */
     externalEventManager;
 
     loginAttempts = 0;
 
     constructor(approach_id, config) {
-        super("minecraft", approach_id);
+        super('minecraft', approach_id);
 
         this.config.prefix = config.prefix;
 
         this.messageManager = new MessageManager(this);
         this.externalEventManager = new ExternalEventManager(this);
+
+        setInterval(
+            () => {
+                this.loginAttempts = 0;
+            },
+            12 * 60 * 60 * 1000
+        );
     }
 
     init() {
         return new Promise((resolve, reject) => {
             try {
-                let timeout = setTimeout(() => {
-                    try {
-                        this.enabled = false;
-                        this.bot.on("end", () => { });
-                        this.bot.end("force");
-                    }
-                    catch (e) { }
-                    reject(`Failed to setup the ${this.id} approach in 180 seconds.`);
-                }, 3 * 60 * 1000);
+                let timeout = setTimeout(
+                    () => {
+                        try {
+                            this.enabled = false;
+                            this.bot.on('end', () => {});
+                            this.bot.end('force');
+                        } catch (e) {}
+                        reject(`Failed to setup the ${this.id} approach in 180 seconds.`);
+                    },
+                    3 * 60 * 1000
+                );
 
                 this.bot = mineflayer.createBot({
                     host: 'mc.hypixel.net',
@@ -62,16 +71,23 @@ class MinecraftApproach extends Approach {
                 this.startOperation();
 
                 this.bot.on('login', () => {
-                    this.loginAttempts = 0;
                     this.enabled = true;
+
+                    setTimeout(() => {
+                        try {
+                            this.bot.chat('/whereami');
+                        } catch (e) {}
+                    }, 1_000);
 
                     resolve();
 
                     clearTimeout(timeout);
-                    logger.success(`Successfully logged in on "${this.id}" approach with client "${this.bot.username}"!`);
+                    logger.success(
+                        `Successfully logged in on "${this.id}" approach with client "${this.bot.username}"!`
+                    );
                 });
 
-                this.bot.on("end", (reason) => {
+                this.bot.on('end', (reason) => {
                     this.enabled = false;
                     if (reason === 'force') {
                         return;
@@ -81,7 +97,9 @@ class MinecraftApproach extends Approach {
 
                     const loginDelay = this.loginAttempts * 5_000;
 
-                    logger.warn(`${this.id}'s bot has disconnected (#${this.loginAttempts}). Will reconnect in ${loginDelay / 1000} seconds.`);
+                    logger.warn(
+                        `${this.id}'s bot has disconnected (#${this.loginAttempts}). Will reconnect in ${loginDelay / 1000} seconds.`
+                    );
 
                     if (this.loginAttempts >= 5) {
                         process.exit(123);
@@ -92,7 +110,7 @@ class MinecraftApproach extends Approach {
                     }, loginDelay);
                 });
 
-                this.bot.on("kicked", (reason) => {
+                this.bot.on('kicked', (reason) => {
                     this.enabled = false;
                     logger.warn(`Minecraft bot has been kicked from the server.`, reason);
 
@@ -101,8 +119,7 @@ class MinecraftApproach extends Approach {
                         info: `Minecraft bot has been kicked from the server for "${JSON.stringify(reason)}"`
                     });
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 logger.warn(`Uncaught exception in ${this.id}.`, e);
             }
         });
@@ -117,16 +134,15 @@ class MinecraftApproach extends Approach {
 
     async startOperation() {
         this.bot.on('message', async (message) => {
-            try{
+            try {
                 await this.messageManager.handle(message);
-            }
-            catch(e){
+            } catch (e) {
                 console.log(e);
             }
         });
     }
 
-    async handleEvent(event){
+    async handleEvent(event) {
         await this.externalEventManager.handle(event);
     }
 }

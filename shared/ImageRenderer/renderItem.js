@@ -1,10 +1,10 @@
 // Credits https://github.com/Altpapier/hypixel-discord-guild-bridge/blob/master/helper/loreRenderer.js
 const Canvas = require('@napi-rs/canvas');
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/2_Minecraft-Italic.otf', "MinecraftItalic");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', "Minecraft");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/minecraft-bold.otf', "MinecraftBold");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', "MinecraftUnicode");
-Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/Monocraft.ttf', "Monocraft");
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/2_Minecraft-Italic.otf', 'BridgeMinecraftItalic');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', 'BridgeMinecraft');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/minecraft-bold.otf', 'BridgeMinecraftBold');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', 'BridgeMinecraftUnicode');
+Canvas.GlobalFonts.registerFromPath(__dirname + '/Fonts/Monocraft.ttf', 'BridgeMonocraft');
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -28,9 +28,9 @@ const RGBA_COLOR = {
 async function getCanvasWidthAndHeight(lore, monospace = false) {
     const canvas = Canvas.createCanvas(1, 1);
     const ctx = canvas.getContext('2d');
-    ctx.font = '24px Minecraft';
+    ctx.font = '24px BridgeMinecraft';
     if (monospace) {
-        ctx.font = '24px Monocraft';
+        ctx.font = '24px BridgeMonocraft';
     }
 
     let highestWidth = 0;
@@ -59,11 +59,11 @@ async function renderLore(itemName, lore, monospace = false) {
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 3;
     ctx.shadowColor = '#131313';
-    ctx.font = '24px Minecraft';
+    ctx.font = '24px BridgeMinecraft';
     ctx.fillStyle = '#ffffff';
 
     if (monospace) {
-        ctx.font = '24px Monocraft';
+        ctx.font = '24px BridgeMonocraft';
     }
 
     // TEXT
@@ -76,15 +76,15 @@ async function renderLore(itemName, lore, monospace = false) {
             ctx.fillStyle = RGBA_COLOR[toRenderItem[0]];
 
             if (toRenderItem.startsWith('l')) {
-                ctx.font = '24px MinecraftBold, MinecraftUnicode';
+                ctx.font = '24px BridgeMinecraftBold, BridgeMinecraftUnicode';
             } else if (toRenderItem.startsWith('o')) {
-                ctx.font = '24px MinecraftItalic, MinecraftUnicode';
+                ctx.font = '24px BridgeMinecraftItalic, BridgeMinecraftUnicode';
             } else {
-                ctx.font = '24px Minecraft, MinecraftUnicode';
+                ctx.font = '24px BridgeMinecraft, BridgeMinecraftUnicode';
             }
 
             if (monospace) {
-                ctx.font = '24px Monocraft';
+                ctx.font = '24px BridgeMonocraft';
             }
 
             ctx.fillText(toRenderItem.substring(1), width, index * 24 + 29);
@@ -92,7 +92,7 @@ async function renderLore(itemName, lore, monospace = false) {
         }
     }
 
-    return canvas.toBuffer("image/png");
+    return canvas.toBuffer('image/png');
 }
 
 module.exports = { renderLore };

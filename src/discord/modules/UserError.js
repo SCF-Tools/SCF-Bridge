@@ -1,5 +1,5 @@
-class UserError extends Error{
-    constructor(message){
+class UserError extends Error {
+    constructor(message) {
         super(message);
     }
 }

@@ -30,6 +30,6 @@
         "discord.js": "^14.22.1",
         "dotenv": "^17.2.3",
         "mineflayer": "^4.33.0",
-        "scf-api": "1.2.0"
+        "scf-api": "1.4.0"
     }
 }

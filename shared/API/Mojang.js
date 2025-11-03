@@ -1,6 +1,6 @@
-const cache = require("#shared/CacheManager.js");
-const config = require("#root/Config.js").get();
-const axios = require("axios");
+const cache = require('#shared/CacheManager.js');
+const config = require('#root/Config.js').get();
+const axios = require('axios');
 
 class Mojang {
     /**
@@ -10,41 +10,34 @@ class Mojang {
      */
 
     /**
-     * @param {String} nick 
+     * @param {String} nick
      * @returns {MinecraftProfile}
      */
     async fetchByNick(nick) {
         nick = nick.toString().toLowerCase();
 
-        let proxy_url = config.API.Mojang.nick_proxy ?
-            `${config.API.Mojang.nick_proxy}${nick}` :
-            null;
+        let proxy_url = config.API.Mojang.nick_proxy ? `${config.API.Mojang.nick_proxy}${nick}` : null;
 
         let profile = await cache.fetch(`mojang-nick-${nick}`, 15 * 60 * 1000, async () => {
-            return await this.handleRequest(
-                proxy_url,
-                `https://api.mojang.com/users/profiles/minecraft/${nick}`
-            )
+            return await this.handleRequest(proxy_url, `https://api.mojang.com/users/profiles/minecraft/${nick}`);
         });
 
         return profile;
     }
 
     /**
-     * @param {String} uuid 
+     * @param {String} uuid
      * @returns {MinecraftProfile}
      */
-    async fetchByUUID(uuid){
+    async fetchByUUID(uuid) {
         uuid = uuid.toString().toLowerCase();
-        let proxy_url = config.API.Mojang.uuid_proxy ?
-            `${config.API.Mojang.uuid_proxy}${uuid}` :
-            null;
+        let proxy_url = config.API.Mojang.uuid_proxy ? `${config.API.Mojang.uuid_proxy}${uuid}` : null;
 
         let profile = await cache.fetch(`mojang-uuid-${uuid}`, 15 * 60 * 1000, async () => {
             return await this.handleRequest(
                 proxy_url,
                 `https://api.minecraftservices.com/minecraft/profile/lookup/${uuid}`
-            )
+            );
         });
 
         return profile;
@@ -53,12 +46,12 @@ class Mojang {
     async handleRequest(proxy_url, fallback_url) {
         let response = {
             uuid: null,
-            nick: null,
+            nick: null
         };
 
         if (proxy_url) {
             try {
-                let proxy_response = (await axios.get(proxy_url));
+                let proxy_response = await axios.get(proxy_url);
 
                 if (proxy_response.data.id) {
                     response.uuid = proxy_response.data.id;
@@ -66,10 +59,9 @@ class Mojang {
 
                     return response;
                 }
-            }
-            catch (e) {
+            } catch (e) {
                 if (e instanceof axios.AxiosError) {
-                    if (["404", "400"].includes(e.status)) {
+                    if ([404, 400].includes(e.status)) {
                         return response;
                     }
                 }
@@ -77,14 +69,13 @@ class Mojang {
         }
 
         try {
-            let fallback_response = (await axios.get(fallback_url));
+            let fallback_response = await axios.get(fallback_url);
 
             if (fallback_response.data.id) {
                 response.uuid = fallback_response.data.id;
                 response.nick = fallback_response.data.name;
             }
-        }
-        catch (e) {}
+        } catch (e) {}
 
         return response;
     }

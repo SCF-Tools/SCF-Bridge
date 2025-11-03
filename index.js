@@ -1,5 +1,5 @@
-const config_loader = require("#root/Config.js");
-const logger = require("#src/Logger.js");
+const config_loader = require('#root/Config.js');
+const logger = require('#src/Logger.js');
 /**
  * @type {import('node:cluster').default}
  */
@@ -8,7 +8,6 @@ const cluster = require('node:cluster');
  * @type {import('axios').Axios}
  */
 const axios = require('axios');
-
 
 async function bootstrap() {
     await config_loader.fetch();
@@ -50,11 +49,11 @@ async function initParent() {
             await axios.post(config.errors.webhook, params, {
                 headers: {
                     'Content-type': 'application/json',
-                    "Authorization": config.approaches.discord.token
+                    Authorization: config.approaches.discord.token
                 }
             });
         } catch (error) {
-            logger.error("Failed to send webhook notification", error);
+            logger.error('Failed to send webhook notification', error);
         }
     }
 
@@ -65,7 +64,7 @@ async function initParent() {
         if (event.id === 'init') {
             await useWebhook(`The bridge has initialized successfully.`, 0x008000);
         }
-        if(event.id === 'warning'){
+        if (event.id === 'warning') {
             await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, 0x808000);
         }
     }
@@ -113,7 +112,9 @@ async function initParent() {
                     }
 
                     if (act_type == 'killYourself') {
-                        setTimeout(() => { process.exit() }, 10000);
+                        setTimeout(() => {
+                            process.exit();
+                        }, 10000);
 
                         completed = true;
                     }
@@ -121,14 +122,12 @@ async function initParent() {
                     if (completed) {
                         await config.SCF.API.longpoll.remove(act_rid);
                     }
-                }
-                catch (e) {
+                } catch (e) {
                     logger.warn(`Failed to handle a longpoll request!`, action);
                     console.log(e);
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             logger.warn(`Encountered an error while handling emergency longpoll.`, e);
         }
     }
@@ -136,8 +135,8 @@ async function initParent() {
     let states = {
         TERMINATED: -1,
         STOPPED: 0,
-        STARTED: 1,
-    }
+        STARTED: 1
+    };
 
     let state = states.STOPPED;
 
@@ -153,16 +152,18 @@ async function initParent() {
         if (code == 123) {
             state = states.TERMINATED;
             useWebhook("Something bad has happened to the bot, maybe it's banned or muted. The app will shut down.");
-            logger.error("The bridge has stopped due to a fatal error requiring manual maintenance. The bridge will not reboot. The parent process is still running.");
+            logger.error(
+                'The bridge has stopped due to a fatal error requiring manual maintenance. The bridge will not reboot. The parent process is still running.'
+            );
         }
 
         if (code == 124) {
-            useWebhook("The bridge failed to start a critical approach.");
-            logger.error("The bridge failed to start a critical approach.");
+            useWebhook('The bridge failed to start a critical approach.');
+            logger.error('The bridge failed to start a critical approach.');
         }
 
         if (code == 5) {
-            logger.warn("The bridge is deploying a new version...")
+            logger.warn('The bridge is deploying a new version...');
         }
     });
 }
@@ -172,7 +173,7 @@ async function initParent() {
  */
 
 async function initChild() {
-    const Application = require("#root/src/Application.js");
+    const Application = require('#root/src/Application.js');
 
     process.on('uncaughtException', (error) => {
         logger.error(`Caught an uncaught exception!`, error);
@@ -184,7 +185,7 @@ async function initChild() {
     });
 
     process.on('unhandledRejection', function (err, promise) {
-        logger.error("Caught an unhandled rejection!", err);
+        logger.error('Caught an unhandled rejection!', err);
         console.log(err, promise);
         process.exit(1);
     });

@@ -9,13 +9,12 @@ class ExternalEventManager {
     }
 
     /**
-     * @param {import("#shared/Events/GenericEvent.js")} event 
+     * @param {import("#shared/Events/GenericEvent.js")} event
      */
     async handle(event) {
         /*if (event instanceof MinecraftRawEvent) {
             this.minecraft.bot.chat(event.payload.message);
         }*/
-
     }
 }
 
