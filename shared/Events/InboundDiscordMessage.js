@@ -16,6 +16,12 @@ class InboundDiscordMessage extends GenericEvent {
     emitter_id;
     type = 'inbound_discord_message';
 
+    channels = {
+        GUILD: "guild",
+        OFFICER: "officer",
+        CONSOLE: "console",
+    }
+
     /**
      * @type {MessagePayload}
      */

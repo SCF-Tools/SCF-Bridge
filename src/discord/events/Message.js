@@ -3,9 +3,7 @@ const config = require('#root/Config.js').get();
 const Mojang = require('#shared/API/Mojang.js');
 const Hypixel = require('#shared/API/Hypixel.js');
 
-const MinecraftRawEvent = require('#shared/Events/MinecraftRawEvent.js');
-const MessageGuildEvent = require('#shared/Events/MessageGuildEvent.js');
-const MessageOfficerEvent = require('#shared/Events/MessageOfficerEvent.js');
+const InboundDiscordMessage = require("#shared/Events/InboundDiscordMessage.js");
 
 const Permissions = require('../modules/PermissionManager.js');
 
@@ -77,7 +75,7 @@ class MessageManager {
                 );
 
                 player_info.user.guild_id = guild_info?.guild?._id;
-            } catch (e) {}
+            } catch (e) { }
         }
 
         return player_info;
@@ -114,11 +112,17 @@ class MessageManager {
             }
 
             if (playerInfo.issues.bridgelocked) {
-                await message.react('🚫').catch((e) => {});
+                await message.react('🚫').catch((e) => { });
                 return;
             }
 
             let cleaned_message = message.content;
+
+            let event = new InboundDiscordMessage(this.discord.id, cleaned_message, '', {
+                display_name: playerInfo.display_name,
+                uuid: playerInfo.user.uuid,
+                guild_id: playerInfo.user.guild_id
+            });            
 
             // Debug Messages
             if (message.channel.id === this.discord.config.channels.console) {
@@ -128,9 +132,7 @@ class MessageManager {
                     return;
                 }
 
-                let event = new MinecraftRawEvent(this.discord.id, message.content);
-                this.discord.emitEvent(event);
-                return;
+                event.payload.channel = event.channels.CONSOLE;
             }
 
             if (message.channel.id === this.discord.config.channels.officer) {
@@ -140,34 +142,16 @@ class MessageManager {
                     return;
                 }
 
-                let event = new MessageOfficerEvent(
-                    this.discord.id,
-                    {
-                        display_name: playerInfo.display_name,
-                        uuid: playerInfo.user.uuid,
-                        guild_id: playerInfo.user.guild_id
-                    },
-                    cleaned_message
-                );
-                this.discord.emitEvent(event);
-                return;
+                event.payload.channel = event.channels.OFFICER;
             }
 
             if (message.channel.id === this.discord.config.channels.guild) {
-                let event = new MessageGuildEvent(
-                    this.discord.id,
-                    {
-                        display_name: playerInfo.display_name,
-                        uuid: playerInfo.user.uuid,
-                        guild_id: playerInfo.user.guild_id
-                    },
-                    cleaned_message
-                );
-                this.discord.emitEvent(event);
-                return;
+                event.payload.channel = event.channels.GUILD;
             }
+
+            this.discord.emitEvent(event);
         } catch (e) {
-            await message.react('❗').catch((e) => {});
+            await message.react('❗').catch((e) => { });
             console.log(e);
         }
     }

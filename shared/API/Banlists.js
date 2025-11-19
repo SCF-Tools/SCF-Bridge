@@ -1,4 +1,4 @@
-const Logger = require('#root/src/Logger.js');
+const Logger = require('#src/Logger.js');
 const cache = require('#shared/CacheManager.js');
 const config = require('#root/Config.js').get();
 const axios = require('axios');

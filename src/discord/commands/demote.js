@@ -1,4 +1,4 @@
-const OutboundMinecraftMessage = require('#root/shared/Events/OutboundMinecraftMessage.js');
+const OutboundMinecraftMessage = require('#shared/Events/OutboundMinecraftMessage.js');
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');

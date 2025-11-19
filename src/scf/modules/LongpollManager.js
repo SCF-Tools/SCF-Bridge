@@ -1,6 +1,6 @@
 const logger = require('#src/Logger.js');
 const banlists = require('#shared/API/Banlists.js');
-const MinecraftRawEvent = require('#shared/Events/MinecraftRawEvent.js');
+const OutboundMinecraftMessage = require("#shared/Events/OutboundMinecraftMessage.js");
 
 const { exec, execSync } = require('node:child_process');
 
@@ -35,7 +35,7 @@ class LongpollManager {
                     const reason = act_data.reason;
 
                     let command = `/g kick ${username} ${reason}`;
-                    let event = new MinecraftRawEvent(this.scf.id, command);
+                    let event = new OutboundMinecraftMessage(this.scf.id, command);
                     this.scf.emitEvent(event);
 
                     completed = true;
@@ -46,7 +46,7 @@ class LongpollManager {
                     const rank = act_data.newRank;
 
                     let command = `/g setrank ${username} ${rank}`;
-                    let event = new MinecraftRawEvent(this.scf.id, command);
+                    let event = new OutboundMinecraftMessage(this.scf.id, command);
                     this.scf.emitEvent(event);
 
                     completed = true;
@@ -89,7 +89,7 @@ class LongpollManager {
 
                     if (!banlist.banned) {
                         let command = `/guild invite ${username}`;
-                        let event = new MinecraftRawEvent(this.scf.id, command);
+                        let event = new OutboundMinecraftMessage(this.scf.id, command);
                         this.scf.emitEvent(event);
                     }
 

@@ -173,7 +173,7 @@ async function initParent() {
  */
 
 async function initChild() {
-    const Application = require('#root/src/Application.js');
+    const Application = require('#src/Application.js');
 
     process.on('uncaughtException', (error) => {
         logger.error(`Caught an uncaught exception!`, error);

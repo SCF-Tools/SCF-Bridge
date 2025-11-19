@@ -1,4 +1,4 @@
-const DiscordConsoleEvent = require('#shared/Events/DiscordConsoleEvent.js');
+const InboundMinecraftMessage = require("#shared/Events/InboundMinecraftMessage.js")
 
 class MessageManager {
     /**
@@ -20,7 +20,7 @@ class MessageManager {
          */
         const coloredMessage = message.toMotd();
 
-        this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch((e) => {
+        this.minecraft.emitEvent(new InboundMinecraftMessage(this.minecraft.id, cleanMessage, coloredMessage)).catch((e) => {
             console.log(e);
         });
 
@@ -31,21 +31,6 @@ class MessageManager {
         if (cleanMessage.includes('You are currently connected to') && !cleanMessage.includes(':')) {
             this.minecraft.bot.chat('/limbo');
             return;
-        }
-
-        const patterns = {
-            player_join: /^Guild > [^:]* joined\.$/gmi,
-            player_leave: /^Guild > [^:]* left\.$/gmi,
-        };
-
-        if (patterns.player_join.test(cleanMessage)) {
-            const nick = cleanMessage.split(" ")[2];
-            console.log(nick);
-        }
-
-        if (patterns.player_leave.test(cleanMessage)) {
-            const nick = cleanMessage.split(" ")[2];
-            console.log(nick);
         }
     }
 }
