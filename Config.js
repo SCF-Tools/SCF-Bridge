@@ -61,6 +61,31 @@ class Config {
         if (process.env.scf_api && !SCF) {
             SCF = new SCFAPIClient(this.env('scf_api'), this.env('discord_token'), this.env('scf_token'));
             SCF.errorHandler((error) => {
+                // Error Reporting
+                try {
+                    let error_message = "An unexpected error occurred.";
+
+                    let axios_response = error?.data?.axios;
+                    let error_status = axios_response?.status;
+                
+                    if (error_status != 200) {
+                        // Either HTTP Error OR undefined (= other issue)
+                        error_message = `Error Code: "${error_status}" - Error "${axios_response?.message ?? "Failed to obtain error message."}"`;
+                    }
+                    else {
+                        error_message = `${error.message ?? "Failed to obtain error message."}`;
+                    }
+
+                    process.send({
+                        id: 'serviceError',
+                        service: "SCF",
+                        error: error_message
+                    });
+                }
+                catch (e) {
+                    console.log(e);
+                }
+
                 logger.error(`SCF API has encountered an error!`, error);
             });
         }

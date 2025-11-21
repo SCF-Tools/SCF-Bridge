@@ -60,7 +60,7 @@ class ExternalEventManager {
             let playerLeave = parser.playerLogout(event.payload.message);
 
             if(playerJoin.found || playerLeave.found){
-                let nick = playerJoin.parts.nick || playerJoin.parts.nick;
+                let nick = playerJoin.parts.nick || playerLeave.parts.nick;
                 let embed_color = color.success;
                 let action = "joined";
 
@@ -79,6 +79,7 @@ class ExternalEventManager {
                 await guild_channel.send({
                     embeds: [embed]
                 });
+                return;
             }
 
             let guildPromotion = parser.guildPromotion(event.payload.message);
@@ -105,6 +106,9 @@ class ExternalEventManager {
                 await guild_channel.send({
                     embeds: [embed]
                 });
+                await events_channel.send({
+                    embeds: [embed]
+                })
             }
         }
     }

@@ -67,6 +67,9 @@ async function initParent() {
         if (event.id === 'warning') {
             await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, 0x808000);
         }
+        if (event.id === 'serviceError') {
+            await useWebhook(`A service \`${event.service.toString()}\` has encountered an error.\n\`\`\`${event.error.toString()}\`\`\``, 0x800000);
+        }
     }
 
     async function handleState() {
