@@ -3,6 +3,7 @@ const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
 const { execSync } = require('child_process');
 const logger = require('#src/Logger.js');
+const branding = require("#root/Branding.js");
 
 class DeployCommand extends DiscordCommand {
     name = 'deploy';
@@ -32,7 +33,7 @@ class DeployCommand extends DiscordCommand {
         setTimeout(updateCode, 10_000);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Bridge Deploy')
             .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`);
 

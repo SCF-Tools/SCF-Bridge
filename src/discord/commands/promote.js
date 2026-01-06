@@ -3,6 +3,7 @@ const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class PromoteCommand extends DiscordCommand {
     name = 'promote';
@@ -33,7 +34,7 @@ class PromoteCommand extends DiscordCommand {
         this.approach.emitEvent(event);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Guild Promotion')
             .setDescription(`The command to promote \`${nick}\` was sent.`);
 

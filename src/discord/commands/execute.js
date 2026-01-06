@@ -3,6 +3,7 @@ const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class ExecuteCommand extends DiscordCommand {
     name = 'execute';
@@ -35,7 +36,7 @@ class ExecuteCommand extends DiscordCommand {
         this.approach.emitEvent(event);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Command Executed')
             .setDescription(`The command \`${command}\` has been executed.`);
 

@@ -3,6 +3,7 @@ const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class MuteCommand extends DiscordCommand {
     name = 'mute';
@@ -40,7 +41,7 @@ class MuteCommand extends DiscordCommand {
         this.approach.emitEvent(event);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Guild Mute')
             .setDescription(`The command to mute \`${nick}\` was sent.`);
 

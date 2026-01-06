@@ -8,6 +8,7 @@ const cluster = require('node:cluster');
  * @type {import('axios').Axios}
  */
 const axios = require('axios');
+const branding = require('./Branding');
 
 async function bootstrap() {
     await config_loader.fetch();
@@ -28,7 +29,7 @@ bootstrap();
 async function initParent() {
     const config = config_loader.get();
 
-    async function useWebhook(message, color = 0x800000) {
+    async function useWebhook(message, color = branding.color.info) {
         let params = {
             content: config.errors.role,
             embeds: [
@@ -59,16 +60,16 @@ async function initParent() {
 
     async function handleEvent(event) {
         if (event.id === 'exception') {
-            await useWebhook(`An exception was caught:\n\`\`\`${event.exception.toString()}\`\`\``, 0x800000);
+            await useWebhook(`An exception was caught:\n\`\`\`${event.exception.toString()}\`\`\``, branding.color.fail);
         }
         if (event.id === 'init') {
-            await useWebhook(`The bridge has initialized successfully.`, 0x008000);
+            await useWebhook(`The bridge has initialized successfully.`, branding.color.success);
         }
         if (event.id === 'warning') {
-            await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, 0x808000);
+            await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, branding.color.warning);
         }
         if (event.id === 'serviceError') {
-            await useWebhook(`A service \`${event.service.toString()}\` has encountered an error.\n\`\`\`${event.error.toString()}\`\`\``, 0x800000);
+            await useWebhook(`A service \`${event.service.toString()}\` has encountered an error.\n\`\`\`${event.error.toString()}\`\`\``, branding.color.fail);
         }
     }
 

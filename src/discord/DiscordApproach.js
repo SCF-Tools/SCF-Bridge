@@ -205,7 +205,7 @@ class DiscordApproach extends Approach {
 
                     let embed = new CustomEmbed();
 
-                    embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(0x800000);
+                    embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(branding.color.fail);
 
                     await interaction.editReply({ embeds: [embed] });
                 } catch (err) {

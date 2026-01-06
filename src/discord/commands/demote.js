@@ -3,6 +3,7 @@ const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class DemoteCommand extends DiscordCommand {
     name = 'demote';
@@ -33,7 +34,7 @@ class DemoteCommand extends DiscordCommand {
         this.approach.emitEvent(event);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Guild Demotion')
             .setDescription(`The command to demote \`${nick}\` was sent.`);
 

@@ -1,6 +1,7 @@
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class KillCommand extends DiscordCommand {
     name = 'kill';
@@ -18,7 +19,7 @@ class KillCommand extends DiscordCommand {
         }, 10_000);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Bridge Kill')
             .setDescription(`The bridge will stop in 10 seconds.`);
 
