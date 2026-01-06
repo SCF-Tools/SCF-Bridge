@@ -3,6 +3,7 @@ const { AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const messageToImage = require('#shared/ImageRenderer/messageToImage.js');
 const parser = require("#shared/ParseHypixelMessage.js");
 const heads = require("#shared/GeneratePlayerHead.js");
+const branding = require('#root/Branding.js');
 
 class ExternalEventManager {
     /**
@@ -19,11 +20,6 @@ class ExternalEventManager {
      */
     async handle(event) {
         if (event instanceof InboundMinecraftMessage) {
-            const color = {
-                success: 0x1F8B4C,
-                fail: 0xED4245
-            };
-
             const console_channel = this.discord.channels.get('console');
             const events_channel = this.discord.channels.get('events');
             const officer_channel = this.discord.channels.get('officer');
@@ -61,11 +57,11 @@ class ExternalEventManager {
 
             if(playerJoin.found || playerLeave.found){
                 let nick = playerJoin.parts.nick || playerLeave.parts.nick;
-                let embed_color = color.success;
+                let embed_color = branding.color.success;
                 let action = "joined";
 
                 if(playerLeave.found){
-                    embed_color = color.fail;
+                    embed_color = branding.color.fail;
                     action = "left";
                 }
 
@@ -89,11 +85,11 @@ class ExternalEventManager {
                 let nick = guildPromotion.parts.nick || guildDemotion.parts.nick;
                 let oldRank = guildPromotion.parts.oldRank || guildDemotion.parts.oldRank;
                 let newRank = guildPromotion.parts.newRank || guildDemotion.parts.newRank;
-                let embed_color = color.success;
+                let embed_color = branding.color.success;
                 let action = "promoted";
 
                 if(guildDemotion.found){
-                    embed_color = color.fail;
+                    embed_color = branding.color.fail;
                     action = "demoted";
                 }
 
@@ -102,6 +98,49 @@ class ExternalEventManager {
                     `${nick} was ${action} from ${oldRank} to ${newRank}`
                 )
                 embed.setColor(embed_color);
+
+                await guild_channel.send({
+                    embeds: [embed]
+                });
+                await events_channel.send({
+                    embeds: [embed]
+                })
+            }
+
+            let guildMute = parser.guildMute(event.payload.message);
+            let userMute = parser.userMute(event.payload.message);
+
+            if(guildMute.found || userMute.found){
+                let nick = userMute.parts.nick || "Guild Chat";
+                let staff = guildMute.parts.staff || userMute.parts.staff;
+                let duration = guildMute.parts.duration || userMute.parts.duration;
+
+                let embed = new EmbedBuilder();
+                embed.setDescription(
+                    `${nick} was muted by ${staff} for ${duration}`
+                )
+                embed.setColor(branding.color.fail);
+
+                await guild_channel.send({
+                    embeds: [embed]
+                });
+                await events_channel.send({
+                    embeds: [embed]
+                })
+            }
+
+            let guildUnmute = parser.guildUnmute(event.payload.message);
+            let userUnmute = parser.userUnmute(event.payload.message);
+
+            if(guildUnmute.found || userUnmute.found){
+                let nick = userUnmute.parts.nick || "Guild Chat";
+                let staff = guildUnmute.parts.staff || userUnmute.parts.staff;
+
+                let embed = new EmbedBuilder();
+                embed.setDescription(
+                    `${nick} was unmuted by ${staff}`
+                )
+                embed.setColor(branding.color.success);
 
                 await guild_channel.send({
                     embeds: [embed]

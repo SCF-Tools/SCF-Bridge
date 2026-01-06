@@ -7,6 +7,7 @@ const safeDiscord = require('./modules/SafeDiscord.js');
 const fs = require('fs');
 const { Routes } = require('discord-api-types/v9');
 const { REST } = require('@discordjs/rest');
+const branding = require('#root/Branding.js');
 
 const MessageManager = require('./events/Message.js');
 const InteractionManager = require('./events/Interaction.js');
@@ -135,7 +136,7 @@ class DiscordApproach extends Approach {
                     embeds: [
                         {
                             title: 'The bridge is online!',
-                            color: 0x008000
+                            color: branding.color.success
                         }
                     ]
                 });

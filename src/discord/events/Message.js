@@ -2,6 +2,7 @@ const cache = require('#shared/CacheManager.js');
 const config = require('#root/Config.js').get();
 const Mojang = require('#shared/API/Mojang.js');
 const Hypixel = require('#shared/API/Hypixel.js');
+const branding = require('#root/Branding.js');
 
 const InboundDiscordMessage = require("#shared/Events/InboundDiscordMessage.js");
 
@@ -103,7 +104,7 @@ class MessageManager {
                 await message.reply({
                     embeds: [
                         {
-                            color: 0x800000,
+                            color: branding.color.fail,
                             description: `In order to use the bridge, please link your account using the \`/${this.discord.config.prefix || ''}link\` command.\nIt is required to match your Discord account to your Hypixel account.`
                         }
                     ]

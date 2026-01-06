@@ -179,11 +179,6 @@ let tests = [
         message: "[MVP+] PChallenges is already in another guild!",
         values: {}
     },
-    {
-        parser: parser.inviteError,
-        message: "[MVP+] PChallenges is already in another guild!",
-        values: {}
-    },
 ];
 
 let total = 0;

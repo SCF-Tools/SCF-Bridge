@@ -1,6 +1,7 @@
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require('#root/Branding.js');
 
 class RebootCommand extends DiscordCommand {
     name = 'reboot';
@@ -18,7 +19,7 @@ class RebootCommand extends DiscordCommand {
         }, 10_000);
 
         let response = new CustomEmbed()
-            .setColor(0x008000)
+            .setColor(branding.color.success)
             .setTitle('Bridge Reboot')
             .setDescription(`The bridge will restart in 10 seconds.`);
 
