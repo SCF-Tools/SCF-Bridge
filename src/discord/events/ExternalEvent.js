@@ -44,7 +44,6 @@ class ExternalEventManager {
              * Think how to manage methods like
              *
              * guildJoinRequest
-             * guildJoin
              *
              * are implemented so that they dont
              * query same APIs twice.

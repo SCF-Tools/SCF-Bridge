@@ -386,8 +386,9 @@ function levelUp(message) {
     return response;
 }
 
-
-
+/**
+ * Error Messages
+ */
 
 function repeatMessage(message) {
     const msg = cleanMessage(message);
