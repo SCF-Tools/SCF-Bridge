@@ -7,7 +7,7 @@ const branding = require("#root/Branding.js");
 
 class PromoteCommand extends DiscordCommand {
     name = 'promote';
-    description = 'Promote the player in the guild.';
+    description = 'Promotes the player in the guild.';
     options = [
         {
             name: 'nick',

@@ -11,7 +11,7 @@ class Mojang {
 
     /**
      * @param {String} nick
-     * @returns {MinecraftProfile}
+     * @returns {Promise<MinecraftProfile>}
      */
     async fetchByNick(nick) {
         nick = nick.toString().toLowerCase();
@@ -27,7 +27,7 @@ class Mojang {
 
     /**
      * @param {String} uuid
-     * @returns {MinecraftProfile}
+     * @returns {Promise<MinecraftProfile>}
      */
     async fetchByUUID(uuid) {
         uuid = uuid.toString().toLowerCase();

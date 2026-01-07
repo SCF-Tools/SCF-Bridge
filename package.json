@@ -4,7 +4,8 @@
     "description": "A service that interlinks the Hypixel guild chat with Discord channels, as well as implements custom features.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node index.js",
+        "test": "node .\\tests\\testParser.js"
     },
     "imports": {
         "#root/*": "./*",

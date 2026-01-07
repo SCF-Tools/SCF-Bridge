@@ -8,7 +8,7 @@ const cluster = require('node:cluster');
  * @type {import('axios').Axios}
  */
 const axios = require('axios');
-const branding = require('./Branding');
+const branding = require('#root/Branding.js');
 
 async function bootstrap() {
     await config_loader.fetch();

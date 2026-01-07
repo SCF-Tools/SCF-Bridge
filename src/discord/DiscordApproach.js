@@ -27,6 +27,7 @@ class DiscordApproach extends Approach {
      * @property {?string} token
      * @property {?string} server
      * @property {?string} prefix
+     * @property {?string} ping_role
      * @property {DiscordChannels} channels
      */
 
@@ -67,6 +68,7 @@ class DiscordApproach extends Approach {
         this.config.token = config.token;
         this.config.server = config.server;
         this.config.prefix = config.prefix;
+        this.config.ping_role = config.ping_role;
 
         this.config.channels = {
             guild: config?.channels?.guild,

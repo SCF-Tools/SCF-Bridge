@@ -2,67 +2,7 @@ const parser = require("#shared/ParseHypixelMessage.js");
 let chalk = require("chalk");
 
 let tests = [
-    {
-        parser: parser.guildJoinRequest,
-        message: "--------------\n[MVP++] Person has requested to join the Guild!\nClick here to accept...\n--------------",
-        values: {
-            nick: "Person"
-        }
-    },
-    {
-        parser: parser.guildJoin,
-        message: "[MVP++] Person joined the guild!",
-        values: {
-            nick: "Person"
-        }
-    },
-    {
-        parser: parser.guildLeave,
-        message: "[MVP++] Person left the guild!",
-        values: {
-            nick: "Person"
-        }
-    },
-    {
-        parser: parser.guildKick,
-        message: "[MVP+] Person was kicked from the guild by [MVP+] Staff!",
-        values: {
-            nick: "Person",
-            staff: "Staff"
-        }
-    },
-    {
-        parser: parser.guildPromotion,
-        message: "[MVP+] Person was promoted from OldRank to NewRank",
-        values: {
-            nick: "Person",
-            oldRank: "OldRank",
-            newRank: "NewRank",
-        }
-    },
-    {
-        parser: parser.guildDemotion,
-        message: "[MVP+] Person was demoted from OldRank to NewRank",
-        values: {
-            nick: "Person",
-            oldRank: "OldRank",
-            newRank: "NewRank",
-        }
-    },
-    {
-        parser: parser.playerLogin,
-        message: "Guild > Person joined.",
-        values: {
-            nick: "Person",
-        }
-    },
-    {
-        parser: parser.playerLogout,
-        message: "Guild > Person left.",
-        values: {
-            nick: "Person",
-        }
-    },
+    // Related to mutes:
     {
         parser: parser.guildMute,
         message: "[MVP+] Staff has muted the guild chat for 1m",
@@ -96,6 +36,86 @@ let tests = [
         }
     },
     {
+        parser: parser.alreadyMuted,
+        message: "This player is already muted!",
+        values: {}
+    },
+    {
+        parser: parser.muteIsTooLong,
+        message: "You cannot mute someone for more than one month",
+        values: {}
+    },
+
+    // Related to ranks:
+    {
+        parser: parser.guildPromotion,
+        message: "[MVP+] Person was promoted from OldRank to NewRank",
+        values: {
+            nick: "Person",
+            oldRank: "OldRank",
+            newRank: "NewRank",
+        }
+    },
+    {
+        parser: parser.guildDemotion,
+        message: "[MVP+] Person was demoted from OldRank to NewRank",
+        values: {
+            nick: "Person",
+            oldRank: "OldRank",
+            newRank: "NewRank",
+        }
+    },
+    {
+        parser: parser.rankNotFound,
+        message: "I couldn't find a rank by the name of 'rank_name'!\n----------------------------------------------------",
+        values: {
+            rank: "rank_name"
+        }
+    },
+    {
+        parser: parser.alreadyLowestRank,
+        message: "[VIP+] Person is already the lowest rank you've created!\n----------------------------------------------------",
+        values: {
+            nick: "Person"
+        }
+    },
+    {
+        parser: parser.alreadySameRank,
+        message: "They already have that rank!\n----------------------------------------------------",
+        values: {}
+    },
+
+    // Related to being in the guild:
+    {
+        parser: parser.guildJoinRequest,
+        message: "--------------\n[MVP++] Person has requested to join the Guild!\nClick here to accept...\n--------------",
+        values: {
+            nick: "Person"
+        }
+    },
+    {
+        parser: parser.guildJoin,
+        message: "[MVP++] Person joined the guild!",
+        values: {
+            nick: "Person"
+        }
+    },
+    {
+        parser: parser.guildLeave,
+        message: "[MVP++] Person left the guild!",
+        values: {
+            nick: "Person"
+        }
+    },
+    {
+        parser: parser.guildKick,
+        message: "[MVP+] Person was kicked from the guild by [MVP+] Staff!",
+        values: {
+            nick: "Person",
+            staff: "Staff"
+        }
+    },
+    {
         parser: parser.onlineInvite,
         message: "You invited [MVP+] Person to your guild. They have 5 minutes to accept.",
         values: {
@@ -109,6 +129,31 @@ let tests = [
             nick: "Person"
         }
     },
+    {
+        parser: parser.inviteError,
+        message: "[MVP+] PChallenges is already in another guild!",
+        values: {}
+    },
+
+
+
+    
+    {
+        parser: parser.playerLogin,
+        message: "Guild > Person joined.",
+        values: {
+            nick: "Person",
+        }
+    },
+    {
+        parser: parser.playerLogout,
+        message: "Guild > Person left.",
+        values: {
+            nick: "Person",
+        }
+    },
+    
+    
     {
         parser: parser.questCompletion,
         message: "GUILD QUEST TIER 1 COMPLETED!",
@@ -157,28 +202,8 @@ let tests = [
             nick: "Person"
         }
     },
-    {
-        parser: parser.notInGuild,
-        message: "[MVP+] Person is not in your guild!",
-        values: {
-            nick: "Person"
-        }
-    },
-    {
-        parser: parser.alreadyMuted,
-        message: "This player is already muted!",
-        values: {}
-    },
-    {
-        parser: parser.cannotMuteMoreThanOneMonth,
-        message: "You cannot mute someone for more than one month",
-        values: {}
-    },
-    {
-        parser: parser.inviteError,
-        message: "[MVP+] PChallenges is already in another guild!",
-        values: {}
-    },
+    
+    
 ];
 
 let total = 0;

@@ -5,7 +5,7 @@ const branding = require("#root/Branding.js");
 
 class KillCommand extends DiscordCommand {
     name = 'kill';
-    description = 'Completely stop the bridge in case of emergency.';
+    description = 'Completely stops the bridge in case of emergency.';
     options = [];
 
     /**

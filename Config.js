@@ -163,6 +163,7 @@ class Config {
                     token: this.env('discord_token'),
                     server: this.env('discord_server'),
                     prefix: this.env('discord_prefix'),
+                    ping_role: this.env('discord_pings'),
                     channels: {
                         guild: this.env('discord_channel_guild'),
                         officer: this.env('discord_channel_officer'),
@@ -175,6 +176,7 @@ class Config {
                     token: this.env('replica_token'),
                     server: this.env('replica_server'),
                     prefix: this.env('replica_prefix'),
+                    ping_role: this.env('replica_pings'),
                     channels: {
                         guild: this.env('replica_channel_guild'),
                         officer: this.env('replica_channel_officer'),

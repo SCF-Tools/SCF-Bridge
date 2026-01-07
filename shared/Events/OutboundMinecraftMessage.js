@@ -5,14 +5,16 @@ class OutboundMinecraftMessage extends GenericEvent {
     type = 'outbound_minecraft_message';
 
     payload = {
-        message: ''
+        message: '',
+        discord_message_id: null /* Optional */
     };
 
-    constructor(emitter_id, message) {
+    constructor(emitter_id, message, discord_message_id = null) {
         super(emitter_id);
 
         this.emitter_id = emitter_id;
         this.payload.message = message;
+        this.payload.discord_message_id = discord_message_id;
     }
 }
 

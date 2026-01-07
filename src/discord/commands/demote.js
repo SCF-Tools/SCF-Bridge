@@ -7,7 +7,7 @@ const branding = require("#root/Branding.js");
 
 class DemoteCommand extends DiscordCommand {
     name = 'demote';
-    description = 'Demote the player in the guild.';
+    description = 'Demotes the player in the guild.';
     options = [
         {
             name: 'nick',

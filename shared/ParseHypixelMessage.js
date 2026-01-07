@@ -10,7 +10,186 @@ function cleanMessage(message) {
 }
 
 /**
- * Guild Parsers
+ * Messages related to mutes:
+ */
+
+function guildMute(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { staff: null, duration: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('has muted the guild chat for')) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has muted the guild chat for (?<duration>.+?)$/);
+
+    if (match) {
+        response.found = true;
+        response.parts.staff = match.groups.username;
+        response.parts.duration = match.groups.duration;
+    }
+    return response;
+}
+
+function guildUnmute(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { staff: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('has unmuted the guild chat!')) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has unmuted the guild chat!$/);
+
+    if (match) {
+        response.found = true;
+        response.parts.staff = match.groups.username;
+    }
+    return response;
+}
+
+function userMute(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { nick: null, staff: null, duration: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('has muted') || !msg.includes('for') || msg.includes('guild chat')) return response;
+
+    const match = msg.match(
+        /^(?:\[.+?\] )?(?<username>.+) has muted (?:\[.+?\] )?(?<mutedUser>.+) for (?<duration>.+?)$/
+    );
+
+    if (match) {
+        response.found = true;
+        response.parts.staff = match.groups.username;
+        response.parts.nick = match.groups.mutedUser;
+        response.parts.duration = match.groups.duration;
+    }
+    return response;
+}
+
+function userUnmute(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { staff: null, nick: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('has unmuted') || msg.includes('guild chat')) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has unmuted (?:\[.+?\] )?(?<unmutedUser>.+?)$/);
+
+    if (match) {
+        response.found = true;
+        response.parts.staff = match.groups.username;
+        response.parts.nick = match.groups.unmutedUser;
+    }
+    return response;
+}
+
+function alreadyMuted(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false };
+
+    if (msg.includes(':')) return response;
+    if (msg.includes('This player is already muted!')) {
+        response.found = true;
+    }
+    return response;
+}
+
+function muteIsTooLong(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false };
+
+    if (msg.includes(':')) return response;
+    if (msg.includes('You cannot mute someone for more than one month')) {
+        response.found = true;
+    }
+    return response;
+}
+
+/**
+ * Messages related to ranks:
+ */
+
+function guildPromotion(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { nick: null, oldRank: null, newRank: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('was promoted from')) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) was promoted from (?<oldRank>.+) to (?<newRank>.+?)$/);
+
+    if (match) {
+        response.found = true;
+        response.parts.nick = match.groups.username;
+        response.parts.oldRank = match.groups.oldRank;
+        response.parts.newRank = match.groups.newRank;
+    }
+    return response;
+}
+
+function guildDemotion(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { nick: null, oldRank: null, newRank: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('was demoted from')) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) was demoted from (?<oldRank>.+) to (?<newRank>.+?)$/);
+
+    if (match) {
+        response.found = true;
+        response.parts.nick = match.groups.username;
+        response.parts.oldRank = match.groups.oldRank;
+        response.parts.newRank = match.groups.newRank;
+    }
+    return response;
+}
+
+function rankNotFound(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { rank: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes(`I couldn't find a rank by the name of`)) return response;
+
+    const match = msg.match(/I couldn't find a rank by the name of '(?<rank>.+)'!/);
+
+    if (match) {
+        response.found = true;
+        response.parts.rank = match.groups.rank;
+    }
+    return response;
+}
+
+function alreadyLowestRank(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false, parts: { nick: null } };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes(`the lowest rank you've created!`)) return response;
+
+    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) is already the lowest rank you've created!/);
+
+    if (match) {
+        response.found = true;
+        response.parts.nick = match.groups.username;
+    }
+    return response;
+}
+
+function alreadySameRank(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false };
+
+    if (msg.includes(':')) return response;
+    if (msg.includes(`They already have that rank!`)) {
+        response.found = true;
+    }
+    return response;
+}
+
+/**
+ * Messages related to being in the guild:
  */
 
 function guildJoinRequest(message) {
@@ -68,7 +247,9 @@ function guildKick(message) {
     if (msg.includes(':')) return response;
     if (!msg.includes('was kicked from the guild by')) return response;
 
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) was kicked from the guild by (?:\[.+?\] )?(?<kicker>.+?)!?$/);
+    const match = msg.match(
+        /^(?:\[.+?\] )?(?<username>.+) was kicked from the guild by (?:\[.+?\] )?(?<kicker>.+?)!?$/
+    );
 
     if (match) {
         response.found = true;
@@ -78,41 +259,68 @@ function guildKick(message) {
     return response;
 }
 
-function guildPromotion(message) {
+function onlineInvite(message) {
     const msg = cleanMessage(message);
-    let response = { found: false, parts: { nick: null, oldRank: null, newRank: null } };
+    let response = { found: false, parts: { nick: null } };
 
     if (msg.includes(':')) return response;
-    if (!msg.includes('was promoted from')) return response;
+    if (!msg.includes('You invited') || !msg.includes('to your guild. They have 5 minutes to accept.')) return response;
 
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) was promoted from (?<oldRank>.+) to (?<newRank>.+?)$/);
+    const match = msg.match(
+        /^You invited (?:\[.+?\] )?(?<username>.+) to your guild\. They have 5 minutes to accept\.$/
+    );
 
     if (match) {
         response.found = true;
         response.parts.nick = match.groups.username;
-        response.parts.oldRank = match.groups.oldRank;
-        response.parts.newRank = match.groups.newRank;
     }
     return response;
 }
 
-function guildDemotion(message) {
+function offlineInvite(message) {
     const msg = cleanMessage(message);
-    let response = { found: false, parts: { nick: null, oldRank: null, newRank: null } };
+    let response = { found: false, parts: { nick: null } };
 
     if (msg.includes(':')) return response;
-    if (!msg.includes('was demoted from')) return response;
+    if (
+        !msg.includes('You sent an offline invite to') ||
+        !msg.includes('They will have 5 minutes to accept once they come online!')
+    )
+        return response;
 
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) was demoted from (?<oldRank>.+) to (?<newRank>.+?)$/);
+    const match = msg.match(
+        /^You sent an offline invite to (?:\[.+?\] )?(?<username>.+?)! They will have 5 minutes to accept once they come online!$/
+    );
 
     if (match) {
         response.found = true;
         response.parts.nick = match.groups.username;
-        response.parts.oldRank = match.groups.oldRank;
-        response.parts.newRank = match.groups.newRank;
     }
     return response;
 }
+
+function inviteError(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false };
+
+    if (msg.includes(':')) return response;
+
+    const errorMessages = [
+        'is already in another guild!',
+        'You cannot invite this player to your guild!',
+        "You've already invited",
+        'is already in your guild!'
+    ];
+
+    if (errorMessages.some((m) => msg.includes(m))) {
+        response.found = true;
+    }
+    return response;
+}
+
+
+
+
 
 function playerLogin(message) {
     const msg = cleanMessage(message);
@@ -146,105 +354,7 @@ function playerLogout(message) {
     return response;
 }
 
-function guildMute(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { staff: null, duration: null } };
 
-    if (msg.includes(':')) return response;
-    if (!msg.includes('has muted the guild chat for')) return response;
-
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has muted the guild chat for (?<duration>.+?)$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.staff = match.groups.username;
-        response.parts.duration = match.groups.duration;
-    }
-    return response;
-}
-
-function guildUnmute(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { staff: null } };
-
-    if (msg.includes(':')) return response;
-    if (!msg.includes('has unmuted the guild chat!')) return response;
-
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has unmuted the guild chat!$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.staff = match.groups.username;
-    }
-    return response;
-}
-
-function userMute(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { nick: null, staff: null, duration: null } };
-
-    if (msg.includes(':')) return response;
-    if (!msg.includes('has muted') || !msg.includes('for') || msg.includes('guild chat')) return response;
-
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has muted (?:\[.+?\] )?(?<mutedUser>.+) for (?<duration>.+?)$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.staff = match.groups.username;
-        response.parts.nick = match.groups.mutedUser;
-        response.parts.duration = match.groups.duration;
-    }
-    return response;
-}
-
-function userUnmute(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { staff: null, nick: null } };
-
-    if (msg.includes(':')) return response;
-    if (!msg.includes('has unmuted') || msg.includes('guild chat')) return response;
-
-    const match = msg.match(/^(?:\[.+?\] )?(?<username>.+) has unmuted (?:\[.+?\] )?(?<unmutedUser>.+?)$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.staff = match.groups.username;
-        response.parts.nick = match.groups.unmutedUser;
-    }
-    return response;
-}
-
-function onlineInvite(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { nick: null } };
-
-    if (msg.includes(':')) return response;
-    if (!msg.includes('You invited') || !msg.includes('to your guild. They have 5 minutes to accept.')) return response;
-
-    const match = msg.match(/^You invited (?:\[.+?\] )?(?<username>.+) to your guild\. They have 5 minutes to accept\.$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.nick = match.groups.username;
-    }
-    return response;
-}
-
-function offlineInvite(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: { nick: null } };
-
-    if (msg.includes(':')) return response;
-    if (!msg.includes('You sent an offline invite to') || !msg.includes('They will have 5 minutes to accept once they come online!')) return response;
-
-    const match = msg.match(/^You sent an offline invite to (?:\[.+?\] )?(?<username>.+?)! They will have 5 minutes to accept once they come online!$/);
-
-    if (match) {
-        response.found = true;
-        response.parts.nick = match.groups.username;
-    }
-    return response;
-}
 
 function questCompletion(message) {
     const msg = cleanMessage(message);
@@ -280,7 +390,7 @@ function levelUp(message) {
 
 function repeatMessage(message) {
     const msg = cleanMessage(message);
-    let response = { found: false, parts: {} };
+    let response = { found: false };
 
     if (msg === 'You cannot say the same message twice!') {
         response.found = true;
@@ -290,7 +400,7 @@ function repeatMessage(message) {
 
 function noPermission(message) {
     const msg = cleanMessage(message);
-    let response = { found: false, parts: {} };
+    let response = { found: false };
 
     if (msg.includes(':')) return response;
 
@@ -307,7 +417,7 @@ function noPermission(message) {
         'You do not have permission to kick people from the guild!'
     ];
 
-    if (noPermMessages.some(m => msg.includes(m))) {
+    if (noPermMessages.some((m) => msg.includes(m))) {
         response.found = true;
     }
     return response;
@@ -359,70 +469,39 @@ function notInGuild(message) {
     return response;
 }
 
-function alreadyMuted(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: {} };
-
-    if (msg.includes(':')) return response;
-    if (msg.includes('This player is already muted!')) {
-        response.found = true;
-    }
-    return response;
-}
-
-function cannotMuteMoreThanOneMonth(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false, parts: {} };
-
-    if (msg.includes(':')) return response;
-    if (msg.includes('You cannot mute someone for more than one month')) {
-        response.found = true;
-    }
-    return response;
-}
-
-function inviteError(message) {
-    const msg = cleanMessage(message);
-    let response = { found: false };
-
-    if (msg.includes(':')) return response;
-
-    const errorMessages = [
-        'is already in another guild!',
-        'You cannot invite this player to your guild!',
-        "You've already invited",
-        'is already in your guild!'
-    ];
-
-    if (errorMessages.some(m => msg.includes(m))) {
-        response.found = true;
-    }
-    return response;
-}
-
 module.exports = {
-    guildJoinRequest,
-    guildJoin,
-    guildLeave,
-    guildKick,
-    guildPromotion,
-    guildDemotion,
-    playerLogin,
-    playerLogout,
+    // Related to mutes:
     guildMute,
     guildUnmute,
     userMute,
     userUnmute,
+    alreadyMuted,
+    muteIsTooLong,
+    // Related to ranks:
+    guildPromotion,
+    guildDemotion,
+    rankNotFound,
+    alreadyLowestRank,
+    alreadySameRank,
+    // Related to being in the guild:
+    guildJoinRequest,
+    guildJoin,
+    guildLeave,
+    guildKick,
     onlineInvite,
     offlineInvite,
+    inviteError,
+
+
+
+    
+    playerLogin,
+    playerLogout,
     questCompletion,
     levelUp,
     repeatMessage,
     noPermission,
     incorrectUsage,
     playerNotFound,
-    notInGuild,
-    alreadyMuted,
-    cannotMuteMoreThanOneMonth,
-    inviteError
+    notInGuild
 };

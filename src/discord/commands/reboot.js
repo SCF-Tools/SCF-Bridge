@@ -5,7 +5,7 @@ const branding = require('#root/Branding.js');
 
 class RebootCommand extends DiscordCommand {
     name = 'reboot';
-    description = 'Restart the bridge\'s worker process.';
+    description = 'Restarts the bridge\'s worker process.';
     options = [];
 
     /**
