@@ -16,10 +16,11 @@ module.exports = {
             let banlist_info = await config.SCF.API.server.isBlacklisted(uuid);
 
             return {
-                banned: banlist_info.blacklisted,
+                banned: banlist_info.banned,
                 reason: banlist_info.reason || null
             };
         },
+
         async SkyKings(uuid) {
             if (!config.API.SkyKings.key) {
                 return {
@@ -28,12 +29,13 @@ module.exports = {
                 };
             }
 
-            let response = await axios.get(`https://api.skykings.net/user/lookup`, {
+            const response = await axios.get(`https://api.skykings.net/user/lookup`, {
                 params: {
-                    uuid: uuid
+                    uuid: uuid,
+                    api_key: config.API.SkyKings.key
                 },
-                headers: {
-                    Authorization: config.API.SkyKings.key
+                validateStatus: function (status) {
+                    return status < 500;
                 }
             });
 
@@ -53,10 +55,12 @@ module.exports = {
                 let result = await cache.fetch(`${banlist_name}-${uuid}`, 10 * 1000, async () => {
                     return await banlist_func(uuid);
                 });
+
                 if (result.banned) {
                     return {
                         banned: true,
-                        flagged_by: banlist_name
+                        flagged_by: banlist_name,
+                        reason: result.reason
                     };
                 }
             } catch (e) {
@@ -65,7 +69,8 @@ module.exports = {
         }
         return {
             banned: false,
-            flagged_by: null
+            flagged_by: null,
+            reason: null
         };
     }
 };

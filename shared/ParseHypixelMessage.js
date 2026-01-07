@@ -318,9 +318,9 @@ function inviteError(message) {
     return response;
 }
 
-
-
-
+/**
+ * Messages related to usual guild events:
+ */
 
 function playerLogin(message) {
     const msg = cleanMessage(message);
@@ -354,8 +354,6 @@ function playerLogout(message) {
     return response;
 }
 
-
-
 function questCompletion(message) {
     const msg = cleanMessage(message);
     let response = { found: false, parts: { tier: null } };
@@ -387,6 +385,9 @@ function levelUp(message) {
     }
     return response;
 }
+
+
+
 
 function repeatMessage(message) {
     const msg = cleanMessage(message);
@@ -491,14 +492,12 @@ module.exports = {
     onlineInvite,
     offlineInvite,
     inviteError,
-
-
-
-    
+    // Related to usual guild events:
     playerLogin,
     playerLogout,
     questCompletion,
     levelUp,
+    // Error Messages
     repeatMessage,
     noPermission,
     incorrectUsage,

@@ -1,8 +1,11 @@
 const InboundMinecraftMessage = require('#shared/Events/InboundMinecraftMessage.js');
 const { AttachmentBuilder, EmbedBuilder, escapeMarkdown } = require('discord.js');
 const messageToImage = require('#shared/ImageRenderer/messageToImage.js');
+const CustomEmbed = require("../modules/CustomEmbed.js");
 const parser = require('#shared/ParseHypixelMessage.js');
 const heads = require('#shared/GeneratePlayerHead.js');
+const Mojang = require("#shared/API/Mojang.js");
+const Banlists = require("#shared/API/Banlists.js");
 const branding = require('#root/Branding.js');
 
 class ExternalEventManager {
@@ -45,11 +48,6 @@ class ExternalEventManager {
              *
              * are implemented so that they dont
              * query same APIs twice.
-             * ----------------------------------------
-             * To do:
-             *
-             * guildLeave
-             * guildKick
              */
 
             /**
@@ -179,23 +177,86 @@ class ExternalEventManager {
              * Events related to being in the guild.
              */
 
+            /**
+             * TODO: ADD GUILDJOINREQUEST
+             */
+
+            let guildJoin = parser.guildJoin(cleaned_message);
+
+            if(guildJoin.found){
+                /**
+                 * Discord is only responsible for showing the banlist info
+                 * in a Discord message, it does nothing feature-wise.
+                 * 
+                 * It is up for Minecraft side to decide whether to
+                 * kick or not.
+                 */
+                let raw_nick = guildJoin.parts.nick;
+                let nick = escapeMarkdown(raw_nick);
+                let uuid = (await Mojang.fetchByNick(raw_nick)).uuid;
+
+                let check_embed = new CustomEmbed();
+                check_embed.setTitle(`${nick} joined the Guild!`);
+                check_embed.setDescription("The player is not flagged in the Banlists.")
+                check_embed.setColor(branding.color.success);
+                check_embed.setThumbnail(heads.getURL(raw_nick));
+                
+                let join_embed = new EmbedBuilder();
+                join_embed.setAuthor({
+                    name: `${raw_nick} joined the Guild!`,
+                    iconURL: heads.getURL(raw_nick)
+                });
+                join_embed.setDescription(`Welcome to the Guild! :heart:`);
+                join_embed.setColor(branding.color.success);
+
+                try{
+                    if(!uuid){
+                        throw "Failed to obtain UUID of the joined player.";
+                    }
+
+                    let banlist_info = await Banlists.check(uuid);
+
+                    if(banlist_info.banned){
+                        check_embed.setDescription(`The player **is flagged** in a Banlist!\n\nFlagged by: \`${banlist_info.flagged_by}\`\nReason: \`${banlist_info.reason}\``);
+                        check_embed.setColor(branding.color.fail);
+                    }
+                }
+                catch(e){
+                    check_embed.setDescription(`**Failed to check the Banlists!**\n\`${e.toString()}\``);
+                    check_embed.setColor(branding.color.fail);
+                }
+
+                await guild_channel.send({
+                    embeds: [join_embed]
+                });
+                
+                await events_channel.send({
+                    content: `${this.discord.config.ping_role || ""}\n:inbox_tray: ${nick} has joined the guild!`,
+                    embeds: [check_embed, join_embed]
+                });
+
+                return;
+            }
+
             let guildLeave = parser.guildLeave(cleaned_message);
             let guildKick = parser.guildKick(cleaned_message);
 
             if (guildLeave.found || guildKick.found) {
-                let nick = escapeMarkdown(guildLeave.parts.nick || guildLeave.parts.nick);
+                let raw_nick = guildLeave.parts.nick || guildLeave.parts.nick;
+                let nick = escapeMarkdown(raw_nick);
 
-                let action = "Left";
-                let description = `${nick} left the Guild!`;
-
+                let action = "left";
                 if (guildKick.found) {
-                    action = "Kicked";
-                    description = `${nick} was kicked from the Guild!!`;
+                    action = "was kicked from";
                 }
 
                 let embed = new EmbedBuilder();
-                embed.setTitle(`Member ${action}`)
-                embed.setDescription(description);
+
+                embed.setAuthor({
+                    name: `${nick} ${action} the Guild!`,
+                    iconURL: heads.getURL(raw_nick)
+                });
+                embed.setDescription(`We hope to see you again! :pray:`);
                 embed.setColor(branding.color.fail);
 
                 await guild_channel.send({
@@ -249,15 +310,14 @@ class ExternalEventManager {
             }
 
             /**
-             * Information Events
-             * Events that have to be shown to some people.
+             * Events related to usual guild events.
              */
 
             let playerLogin = parser.playerLogin(cleaned_message);
             let playerLogout = parser.playerLogout(cleaned_message);
 
             if (playerLogin.found || playerLogout.found) {
-                let nick = escapeMarkdown(playerLogin.parts.nick || playerLogout.parts.nick);
+                let nick = playerLogin.parts.nick || playerLogout.parts.nick;
                 let embed_color = branding.color.success;
                 let action = 'joined';
 
@@ -325,21 +385,51 @@ class ExternalEventManager {
 
             /**
              * Error Events
-             * Events that only appear in logs.
              */
+
+            let repeatMessage = parser.repeatMessage(cleaned_message);
+            
+            if(repeatMessage.found){
+                let error_message = `Bot cannot say the same message twice!`;
+                let embed = new EmbedBuilder();
+                embed.setDescription(error_message);
+                embed.setColor(branding.color.fail);
+
+                await guild_channel.send({
+                    embeds: [embed]
+                });
+
+                return;
+            }
 
             let noPermission = parser.noPermission(cleaned_message);
             let incorrectUsage = parser.incorrectUsage(cleaned_message);
 
-            // Small errors that have no parts.
             if (noPermission.found || incorrectUsage.found) {
                 let error_message = 'An error was encountered.';
 
-                if (inviteError.found) error_message = `Failed to invite a player to the guild!`;
                 if (noPermission.found) error_message = `Bot is missing permission to run the command.`;
                 if (incorrectUsage.found) error_message = `The command was used incorrectly.`;
-                if (alreadyMuted.found) error_message = `The user was already muted.`;
-                if (muteIsTooLong.found) error_message = `You cannot mute someone for more than one month!`;
+
+                let embed = new EmbedBuilder();
+                embed.setDescription(error_message);
+                embed.setColor(branding.color.fail);
+
+                await events_channel.send({
+                    embeds: [embed]
+                });
+
+                return;
+            }
+
+            let playerNotFound = parser.playerNotFound(cleaned_message);
+            let notInGuild = parser.notInGuild(cleaned_message);
+
+            if (playerNotFound.found || notInGuild.found) {
+                let nick = escapeMarkdown(playerNotFound.parts.nick || notInGuild.parts.nick);
+                let error_message = `Player ${nick} not found!`;
+
+                if (notInGuild.found) error_message = `${nick} is not in this guild!`;
 
                 let embed = new EmbedBuilder();
                 embed.setDescription(error_message);

@@ -134,10 +134,8 @@ let tests = [
         message: "[MVP+] PChallenges is already in another guild!",
         values: {}
     },
-
-
-
     
+    // Related to usual guild events.
     {
         parser: parser.playerLogin,
         message: "Guild > Person joined.",
@@ -151,9 +149,7 @@ let tests = [
         values: {
             nick: "Person",
         }
-    },
-    
-    
+    },    
     {
         parser: parser.questCompletion,
         message: "GUILD QUEST TIER 1 COMPLETED!",
@@ -168,6 +164,8 @@ let tests = [
             level: "100"
         }
     },
+
+    // Error Messages
     {
         parser: parser.repeatMessage,
         message: "You cannot say the same message twice!",
@@ -201,9 +199,7 @@ let tests = [
         values: {
             nick: "Person"
         }
-    },
-    
-    
+    },    
 ];
 
 let total = 0;
