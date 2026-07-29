@@ -133,7 +133,7 @@ class ExternalEventManager {
                 }
 
                 let embed = new EmbedBuilder();
-                embed.setDescription(`${nick} was ${action} from ${oldRank} to ${newRank}`);
+                embed.setDescription(`${nick} was ${action} from ${escapeMarkdown(oldRank)} to ${escapeMarkdown(newRank)}`);
                 embed.setColor(embed_color);
 
                 await guild_channel.send({
@@ -153,7 +153,7 @@ class ExternalEventManager {
                 let error_message = 'An error was encountered.';
 
                 if (rankNotFound.found)
-                    error_message = `Rank ${rankNotFound.parts.rank} does not exist.`;
+                    error_message = `Rank ${escapeMarkdown(rankNotFound.parts.rank)} does not exist.`;
                 if (alreadyLowestRank.found)
                     error_message = `${escapeMarkdown(
                         alreadyLowestRank.parts.nick

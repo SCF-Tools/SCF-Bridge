@@ -22,6 +22,10 @@ class LinkCommand extends DiscordCommand {
      * @param {import("discord.js").CommandInteraction} interaction
      */
     async execute(interaction) {
+        if(!config.SCF){
+            throw new UserError('SCF Features are disabled.');
+        }
+
         let nick = interaction.options.getString('nick');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');

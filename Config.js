@@ -67,7 +67,7 @@ class Config {
 
                     let axios_response = error?.data?.axios;
                     let error_status = axios_response?.status;
-                
+
                     if (error_status != 200) {
                         // Either HTTP Error OR undefined (= other issue)
                         error_message = `Error Code: "${error_status}" - Error "${axios_response?.message ?? "Failed to obtain error message."}"`;
@@ -75,12 +75,16 @@ class Config {
                     else {
                         error_message = `${error.message ?? "Failed to obtain error message."}`;
                     }
-
-                    process.send({
-                        id: 'serviceError',
-                        service: "SCF",
-                        error: error_message
-                    });
+                    try {
+                        process.send({
+                            id: 'serviceError',
+                            service: "SCF",
+                            error: error_message
+                        });
+                    }
+                    catch(e){
+                        logger.error(`Failed to send serviceError event to parent process.`, e);
+                    }
                 }
                 catch (e) {
                     console.log(e);
