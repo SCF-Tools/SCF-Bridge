@@ -87,7 +87,7 @@ class MessageManager {
      */
     async handle(message) {
         try {
-            if (![this.discord.config.channels.guild, this.discord.config.channels.officer].includes(message.channel.id)) {
+            if (![this.discord.config.channels.guild, this.discord.config.channels.officer, this.discord.config.channels.console].includes(message.channel.id)) {
                 return; // We are not listening to these channels.
             }
 

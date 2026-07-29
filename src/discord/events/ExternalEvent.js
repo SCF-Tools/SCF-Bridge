@@ -241,7 +241,7 @@ class ExternalEventManager {
             let guildKick = parser.guildKick(cleaned_message);
 
             if (guildLeave.found || guildKick.found) {
-                let raw_nick = guildLeave.parts.nick || guildLeave.parts.nick;
+                let raw_nick = guildLeave.parts.nick || guildKick.parts.nick;
                 let nick = escapeMarkdown(raw_nick);
 
                 let action = "left";
@@ -263,7 +263,7 @@ class ExternalEventManager {
                 });
                 
                 await events_channel.send({
-                    content: `${this.discord.config.ping_role || ""}\n:outbox_tray: ${nick} has left the guild!`,
+                    content: `${this.discord.config.ping_role || ""}\n:outbox_tray: ${nick} ${action} the guild!`,
                     embeds: [embed]
                 });
 

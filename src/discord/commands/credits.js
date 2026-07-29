@@ -1,5 +1,6 @@
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
+const branding = require('#root/Branding.js');
 
 class CreditsCommand extends DiscordCommand {
     name = 'credits';

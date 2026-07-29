@@ -199,7 +199,12 @@ let tests = [
         values: {
             nick: "Person"
         }
-    },    
+    },
+    {
+        parser: parser.hypixelMute,
+        message: "Your mute will expire in 60d 1h 5m 24s",
+        values: {}
+    },
 ];
 
 let total = 0;
@@ -218,14 +223,19 @@ for (const test of tests) {
         continue;
     }
 
+    let invalid_values = [];
     for (const [name, value] of Object.entries(test.values)) {
         if (response?.parts?.[name] != value) {
-            console.log(`${chalk.bgRedBright(` Fail `)} ${chalk.redBright(`Method ${parser.name} returned a wrong value.`)} ${chalk.redBright(`${total}/${tests.length}`)}`);
-            console.log("Expected:", test.values);
-            console.log("Returned:", response?.parts);
-            fails++;
-            continue;
+            invalid_values.push(`Expected ${name} to be ${value}, but got ${response?.parts?.[name]}`);
         }
+    }
+
+    if (invalid_values.length > 0) {
+        console.log(`${chalk.bgRedBright(` Fail `)} ${chalk.redBright(`Method ${parser.name} returned a wrong value.`)} ${chalk.redBright(`${total}/${tests.length}`)}`);
+        console.log("Expected:", test.values);
+        console.log("Returned:", response?.parts);
+        fails++;
+        continue;
     }
 
     if (Object.entries(response?.parts ?? {}).length != Object.entries(test.values).length) {

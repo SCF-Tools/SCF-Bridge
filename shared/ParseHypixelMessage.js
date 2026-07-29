@@ -471,6 +471,17 @@ function notInGuild(message) {
     return response;
 }
 
+function hypixelMute(message) {
+    const msg = cleanMessage(message);
+    let response = { found: false };
+
+    if (msg.includes(':')) return response;
+    if (!msg.includes('Your mute will expire in')) return response;
+
+    response.found = true;    
+    return response;
+}
+
 module.exports = {
     // Related to mutes:
     guildMute,
@@ -486,8 +497,8 @@ module.exports = {
     alreadyLowestRank,
     alreadySameRank,
     // Related to being in the guild:
-    guildJoinRequest,
-    guildJoin,
+    guildJoinRequest,   // MC Action Required
+    guildJoin,          // MC Action Required
     guildLeave,
     guildKick,
     onlineInvite,
@@ -503,5 +514,6 @@ module.exports = {
     noPermission,
     incorrectUsage,
     playerNotFound,
-    notInGuild
+    notInGuild,
+    hypixelMute
 };

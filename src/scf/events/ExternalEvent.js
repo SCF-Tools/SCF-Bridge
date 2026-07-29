@@ -24,17 +24,17 @@ class ExternalEventManager {
             let guildKick = parser.guildKick(message);
 
             if (guildLeave.found || guildKick.found) {
-                let nick = guildLeave.parts.nick || guildLeave.parts.nick;
-                let uuid = await Mojang.fetchByNick(nick);
+                let nick = guildLeave.parts.nick || guildKick.parts.nick;
+                let profile = await Mojang.fetchByNick(nick);
 
-                if (!uuid) {
+                if (!profile.uuid) {
                     Logger.error(`[SCF API] Failed to handle leave event, no UUID found!`, nick);
                     return;
                 }
 
                 await this.scf.client.API.longpoll.create('userLeave', 'scf_management', {
                     version: 1,
-                    uuid: uuid
+                    uuid: profile.uuid
                 })
 
                 return;

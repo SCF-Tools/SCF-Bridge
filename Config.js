@@ -6,7 +6,7 @@ const logger = require('#src/Logger.js');
 const SCFAPIClient = require('scf-api');
 
 /**
- * @type {SCFAPIClient.default}
+ * @type {SCFAPIClient}
  */
 let SCF;
 
@@ -114,7 +114,6 @@ class Config {
                         '1048690255903072340', // SCF Moderator
 
                         '1266856339406192700', // SBU Guild Staff
-                        '924332988743966751', // SBU Jr. Moderator
                         '801634222577156097' // SBU Moderator
                     ]
                 },
@@ -156,7 +155,7 @@ class Config {
             approaches: {
                 minecraft: {
                     critical: true,
-                    prefix: "!"
+                    prefix: "!",
                 },
                 discord: {
                     critical: true,

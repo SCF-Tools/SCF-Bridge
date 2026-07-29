@@ -3,6 +3,7 @@ const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const branding = require('#root/Branding.js');
 const Mojang = require('#shared/API/Mojang.js');
+const Hypixel = require('#shared/API/Hypixel.js');
 const config = require('#root/Config.js').get();
 
 class LinkCommand extends DiscordCommand {
@@ -32,7 +33,7 @@ class LinkCommand extends DiscordCommand {
         }
 
         let guild_info = await Hypixel.fetch(`https://api.hypixel.net/v2/player?uuid=${minecraft_profile.uuid}`);
-        let discord_tag = guild_info?.player?.socialMedia?.links?.DISCORD;
+        let discord_tag = guild_info?.player?.socialMedia?.links?.DISCORD ?? "";
 
         if(discord_tag.toLowerCase() != interaction.user.tag.toLowerCase()){
             throw new UserError(`Your linked Discord account on Hypixel is different from this one!\n\nTag on Hypixel: ${discord_tag}\nDiscord Tag: ${interaction.user.tag}`);
