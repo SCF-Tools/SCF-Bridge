@@ -19,30 +19,6 @@ module.exports = {
                 banned: banlist_info.banned,
                 reason: banlist_info.reason || null
             };
-        },
-
-        async SkyKings(uuid) {
-            if (!config.API.SkyKings.key) {
-                return {
-                    banned: false,
-                    reason: null
-                };
-            }
-
-            const response = await axios.get(`https://api.skykings.net/user/lookup`, {
-                params: {
-                    uuid: uuid,
-                    api_key: config.API.SkyKings.key
-                },
-                validateStatus: function (status) {
-                    return status < 500;
-                }
-            });
-
-            return {
-                banned: response.data?.result?.scammer || false,
-                reason: response.data?.result?.reason || null
-            };
         }
     },
 
