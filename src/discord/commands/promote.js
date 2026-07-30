@@ -1,12 +1,13 @@
-const MinecraftRawEvent = require('#root/shared/Events/MinecraftRawEvent.js');
+const OutboundMinecraftMessage = require('#shared/Events/OutboundMinecraftMessage.js');
 const DiscordCommand = require('../modules/DiscordCommand.js');
 const UserError = require('../modules/UserError.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
+const branding = require("#root/Branding.js");
 
 class PromoteCommand extends DiscordCommand {
     name = 'promote';
-    description = 'Promote the player in the guild.';
+    description = 'Promotes the player in the guild.';
     options = [
         {
             name: 'nick',
@@ -22,18 +23,18 @@ class PromoteCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.ADMINISTRATOR);
 
-        let nick = interaction.options.getString('nick');
+        const nick = interaction.options.getString('nick');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let command = `/g promote ${nick}`;
+        const command = `/g promote ${nick}`;
 
-        let event = new MinecraftRawEvent(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
-            .setColor(0x008000)
+        const response = new CustomEmbed()
+            .setColor(branding.color.success)
             .setTitle('Guild Promotion')
             .setDescription(`The command to promote \`${nick}\` was sent.`);
 

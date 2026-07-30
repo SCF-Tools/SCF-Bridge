@@ -4,9 +4,9 @@ const axios = require('axios');
 
 module.exports = {
     async fetch(url) {
-        let proxy_url = config.API.Hypixel.proxy ? url.replace('api.hypixel.net', config.API.Hypixel.proxy) : null;
+        const proxy_url = config.API.Hypixel.proxy ? url.replace('api.hypixel.net', config.API.Hypixel.proxy) : null;
 
-        let response = await cache.fetch(`hypixel-${url}`, 30 * 60 * 1000, async () => {
+        const response = await cache.fetch(`hypixel-${url}`, 30 * 60 * 1000, async () => {
             return await this.handleRequest(proxy_url, url);
         });
 
@@ -22,9 +22,9 @@ module.exports = {
 
         if (proxy_url) {
             try {
-                let proxy_response = (await axios.get(proxy_url, headers)).data;
+                const proxy_response = (await axios.get(proxy_url, headers)).data;
                 return proxy_response;
-            } catch (e) {}
+            } catch (e) { /* ignore */ }
         }
 
         return (await axios.get(fallback_url, headers)).data;

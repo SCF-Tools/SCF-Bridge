@@ -2,7 +2,8 @@ const DiscordCommand = require('../modules/DiscordCommand.js');
 const CustomEmbed = require('../modules/CustomEmbed.js');
 const Permissions = require('../modules/PermissionManager.js');
 const { execSync } = require('child_process');
-const logger = require('#root/src/Logger.js');
+const logger = require('#src/Logger.js');
+const branding = require("#root/Branding.js");
 
 class DeployCommand extends DiscordCommand {
     name = 'deploy';
@@ -13,7 +14,7 @@ class DeployCommand extends DiscordCommand {
      * @param {import("discord.js").CommandInteraction} interaction
      */
     async execute(interaction) {
-        Permissions.canExecute(interaction.member, Permissions.tiers.ADMINISTRATOR);
+        Permissions.canExecute(interaction.member, Permissions.tiers.OWNER);
 
         function updateCode() {
             try {
@@ -31,8 +32,8 @@ class DeployCommand extends DiscordCommand {
 
         setTimeout(updateCode, 10_000);
 
-        let response = new CustomEmbed()
-            .setColor(0x008000)
+        const response = new CustomEmbed()
+            .setColor(branding.color.success)
             .setTitle('Bridge Deploy')
             .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`);
 

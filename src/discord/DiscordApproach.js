@@ -5,8 +5,9 @@ const { Client, GatewayIntentBits, ActivityType, Collection } = require('discord
 const CustomEmbed = require('./modules/CustomEmbed.js');
 const safeDiscord = require('./modules/SafeDiscord.js');
 const fs = require('fs');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v9.js');
 const { REST } = require('@discordjs/rest');
+const branding = require('#root/Branding.js');
 
 const MessageManager = require('./events/Message.js');
 const InteractionManager = require('./events/Interaction.js');
@@ -26,6 +27,7 @@ class DiscordApproach extends Approach {
      * @property {?string} token
      * @property {?string} server
      * @property {?string} prefix
+     * @property {?string} ping_role
      * @property {DiscordChannels} channels
      */
 
@@ -66,6 +68,7 @@ class DiscordApproach extends Approach {
         this.config.token = config.token;
         this.config.server = config.server;
         this.config.prefix = config.prefix;
+        this.config.ping_role = config.ping_role;
 
         this.config.channels = {
             guild: config?.channels?.guild,
@@ -129,17 +132,17 @@ class DiscordApproach extends Approach {
                 ]
             });
 
-            let guild_channel = this.channels.get('guild');
+            const guild_channel = this.channels.get('guild');
             if (guild_channel) {
                 await safeDiscord.send(guild_channel, {
                     embeds: [
                         {
                             title: 'The bridge is online!',
-                            color: 0x008000
+                            color: branding.color.success
                         }
                     ]
                 });
-            } else logger.error(`Channel "guild" not found on ${this.id}!`);
+            } else {logger.error(`Channel "guild" not found on ${this.id}!`);}
 
             await this.registerMessageHandler();
             await this.registerCommandHandler();
@@ -202,9 +205,9 @@ class DiscordApproach extends Approach {
                         error_message = `\`\`\`${e?.message || 'Unknown error.'}\`\`\``;
                     }
 
-                    let embed = new CustomEmbed();
+                    const embed = new CustomEmbed();
 
-                    embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(0x800000);
+                    embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(branding.color.fail);
 
                     await interaction.editReply({ embeds: [embed] });
                 } catch (err) {

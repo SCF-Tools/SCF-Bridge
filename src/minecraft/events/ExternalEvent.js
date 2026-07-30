@@ -1,6 +1,5 @@
-const MinecraftRawEvent = require('#shared/Events/MinecraftRawEvent.js');
-const MessageGuildEvent = require('#root/shared/Events/MessageGuildEvent.js');
-const MessageOfficerEvent = require('#root/shared/Events/MessageOfficerEvent.js');
+const OutboundMinecraftMessage = require("#shared/Events/OutboundMinecraftMessage.js");
+const InboundDiscordMessage = require("#shared/Events/InboundDiscordMessage.js");
 
 class ExternalEventManager {
     /**
@@ -20,18 +19,27 @@ class ExternalEventManager {
             return;
         }
 
-        if (event instanceof MinecraftRawEvent) {
-            this.minecraft.bot.chat(event.payload.message);
+        if (event instanceof OutboundMinecraftMessage) {
+            const command = event.payload.message.toString().slice(0, 250);
+            
+            this.minecraft.bot.chat(command);
         }
 
-        if (event instanceof MessageGuildEvent || event instanceof MessageOfficerEvent) {
-            let message = event.payload.message;
-            let nick = event.payload.player.display_name;
+        if (event instanceof InboundDiscordMessage) {
+            const channels = event.channels;
+            const message = event.payload.message;
+            const nick = event.payload.player.display_name;
             let channel = '/gc';
 
-            if (event instanceof MessageOfficerEvent) channel = '/oc';
+            if (event.payload.channel == channels.OFFICER) channel = '/oc';
 
-            this.minecraft.bot.chat(`${channel} ${nick} » ${message}`);
+            let command = `${channel} ${nick} » ${message}`.toString().slice(0, 250);
+
+            if (event.payload.channel == channels.CONSOLE) {
+                command = `${message}`.toString().slice(0, 250);
+            }
+            
+            this.minecraft.bot.chat(command);
         }
     }
 }

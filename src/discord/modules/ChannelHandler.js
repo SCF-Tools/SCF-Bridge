@@ -12,7 +12,7 @@ class ChannelHandler {
      * @returns {import("discord.js").TextChannel}
      */
     get(channel_type) {
-        let id = this.discord.config.channels?.[channel_type] ?? channel_type;
+        const id = this.discord.config.channels?.[channel_type] ?? channel_type;
         return this.discord.client.channels.cache.get(id);
     }
 }

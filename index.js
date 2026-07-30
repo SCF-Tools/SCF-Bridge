@@ -8,6 +8,7 @@ const cluster = require('node:cluster');
  * @type {import('axios').Axios}
  */
 const axios = require('axios');
+const branding = require('#root/Branding.js');
 
 async function bootstrap() {
     await config_loader.fetch();
@@ -28,8 +29,8 @@ bootstrap();
 async function initParent() {
     const config = config_loader.get();
 
-    async function useWebhook(message, color = 0x800000) {
-        let params = {
+    async function useWebhook(message, color = branding.color.info) {
+        const params = {
             content: config.errors.role,
             embeds: [
                 {
@@ -59,13 +60,16 @@ async function initParent() {
 
     async function handleEvent(event) {
         if (event.id === 'exception') {
-            await useWebhook(`An exception was caught:\n\`\`\`${event.exception.toString()}\`\`\``, 0x800000);
+            await useWebhook(`An exception was caught:\n\`\`\`${event.exception.toString()}\`\`\``, branding.color.fail);
         }
         if (event.id === 'init') {
-            await useWebhook(`The bridge has initialized successfully.`, 0x008000);
+            await useWebhook(`The bridge has initialized successfully.`, branding.color.success);
         }
         if (event.id === 'warning') {
-            await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, 0x808000);
+            await useWebhook(`A warning was issued.\n\`\`\`${event.info.toString()}\`\`\``, branding.color.warning);
+        }
+        if (event.id === 'serviceError') {
+            await useWebhook(`A service \`${event.service.toString()}\` has encountered an error.\n\`\`\`${event.error.toString()}\`\`\``, branding.color.fail);
         }
     }
 
@@ -93,13 +97,13 @@ async function initParent() {
     async function handleEmergencyLongpoll() {
         try {
             if (!config.SCF) return;
-            let requests = await config.SCF.API.longpoll.getApplicable();
+            const requests = await config.SCF.API.longpoll.getApplicable();
 
-            for (let action of requests) {
+            for (const action of requests) {
                 try {
-                    let act_rid = action.rid ?? 'NONE';
-                    let act_type = action.action ?? 'NONE';
-                    let act_data = action.data ?? {};
+                    const act_rid = action.rid ?? 'NONE';
+                    const act_type = action.action ?? 'NONE';
+                    
                     let completed = false;
 
                     if (act_type == 'forceReboot') {
@@ -132,7 +136,7 @@ async function initParent() {
         }
     }
 
-    let states = {
+    const states = {
         TERMINATED: -1,
         STOPPED: 0,
         STARTED: 1
@@ -173,7 +177,7 @@ async function initParent() {
  */
 
 async function initChild() {
-    const Application = require('#root/src/Application.js');
+    const Application = require('#src/Application.js');
 
     process.on('uncaughtException', (error) => {
         logger.error(`Caught an uncaught exception!`, error);

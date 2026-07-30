@@ -1,10 +1,8 @@
-const { TextChannel, MessagePayload, MessageCreateOptions } = require('discord.js');
-
 module.exports = {
     /**
-     * @param {TextChannel} channel
-     * @param {string | MessagePayload | MessageCreateOptions} options
-     * @return {Promise<Message<true>|undefined>}
+     * @param {import('discord.js').TextChannel} channel
+     * @param {string | import('discord.js').MessagePayload | import('discord.js').MessageCreateOptions} options
+     * @return {Promise<import('discord.js').Message<true>|undefined>}
      */
     async send(channel, options) {
         try {

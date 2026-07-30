@@ -6,7 +6,7 @@ const logger = require('#src/Logger.js');
 const SCFAPIClient = require('scf-api');
 
 /**
- * @type {SCFAPIClient.default}
+ * @type {SCFAPIClient}
  */
 let SCF;
 
@@ -30,9 +30,9 @@ class Config {
             /**
              * @type {SCFAPIClient.default}
              */
-            let SCF_CONFIG_CLIENT = new SCFAPIClient(process.env.scf_api, process.env.discord_token);
+            const SCF_CONFIG_CLIENT = new SCFAPIClient(process.env.scf_api, process.env.discord_token);
 
-            let config = await SCF_CONFIG_CLIENT.API.services.getConfig();
+            const config = await SCF_CONFIG_CLIENT.API.services.getConfig();
 
             this.#external.config = config;
 
@@ -49,10 +49,10 @@ class Config {
             throw new Error('Trying to use an uninitialized external config.');
         }
 
-        let process_env = process.env?.[name];
-        let external_env = this.#external.config?.[name];
+        const process_env = process.env?.[name];
+        const external_env = this.#external.config?.[name];
 
-        let final_env = external_env ?? process_env;
+        const final_env = external_env ?? process_env;
 
         return final_env;
     }
@@ -61,6 +61,35 @@ class Config {
         if (process.env.scf_api && !SCF) {
             SCF = new SCFAPIClient(this.env('scf_api'), this.env('discord_token'), this.env('scf_token'));
             SCF.errorHandler((error) => {
+                // Error Reporting
+                try {
+                    let error_message = "An unexpected error occurred.";
+
+                    const axios_response = error?.data?.axios;
+                    const error_status = axios_response?.status;
+
+                    if (error_status != 200) {
+                        // Either HTTP Error OR undefined (= other issue)
+                        error_message = `Error Code: "${error_status}" - Error "${axios_response?.message ?? "Failed to obtain error message."}"`;
+                    }
+                    else {
+                        error_message = `${error.message ?? "Failed to obtain error message."}`;
+                    }
+                    try {
+                        process.send({
+                            id: 'serviceError',
+                            service: "SCF",
+                            error: error_message
+                        });
+                    }
+                    catch(e){
+                        logger.error(`Failed to send serviceError event to parent process.`, e);
+                    }
+                }
+                catch (e) {
+                    console.log(e);
+                }
+
                 logger.error(`SCF API has encountered an error!`, error);
             });
         }
@@ -73,7 +102,7 @@ class Config {
             SCF: SCF,
             identity: {
                 unique_id: `${this.env('unique_id')} | Prefix: ${this.env('discord_prefix')}`,
-                logo: this.env('logo_url')
+                logo: this.env('logo_url'),
             },
             permissions: {
                 EVERYONE: {
@@ -89,7 +118,6 @@ class Config {
                         '1048690255903072340', // SCF Moderator
 
                         '1266856339406192700', // SBU Guild Staff
-                        '924332988743966751', // SBU Jr. Moderator
                         '801634222577156097' // SBU Moderator
                     ]
                 },
@@ -104,7 +132,7 @@ class Config {
                         '766041783137468506' // SBU Administrator
                     ]
                 },
-                COUNCIL: {
+                OWNER: {
                     name: 'Council',
                     level: 3,
                     roles: [
@@ -130,13 +158,15 @@ class Config {
             },
             approaches: {
                 minecraft: {
-                    critical: true
+                    critical: true,
+                    prefix: "!",
                 },
                 discord: {
                     critical: true,
                     token: this.env('discord_token'),
                     server: this.env('discord_server'),
                     prefix: this.env('discord_prefix'),
+                    ping_role: this.env('discord_pings'),
                     channels: {
                         guild: this.env('discord_channel_guild'),
                         officer: this.env('discord_channel_officer'),
@@ -149,6 +179,7 @@ class Config {
                     token: this.env('replica_token'),
                     server: this.env('replica_server'),
                     prefix: this.env('replica_prefix'),
+                    ping_role: this.env('replica_pings'),
                     channels: {
                         guild: this.env('replica_channel_guild'),
                         officer: this.env('replica_channel_officer'),

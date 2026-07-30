@@ -7,7 +7,9 @@ const ExternalEventManager = require('./events/ExternalEvent.js');
 const mineflayer = require('mineflayer');
 
 class MinecraftApproach extends Approach {
-    config = {};
+    config = {
+        prefix: ""
+    };
 
     /**
      * @type {import("mineflayer").Bot}
@@ -28,6 +30,8 @@ class MinecraftApproach extends Approach {
     constructor(approach_id, config) {
         super('minecraft', approach_id);
 
+        this.config.prefix = config.prefix;
+
         this.messageManager = new MessageManager(this);
         this.externalEventManager = new ExternalEventManager(this);
 
@@ -42,13 +46,13 @@ class MinecraftApproach extends Approach {
     init() {
         return new Promise((resolve, reject) => {
             try {
-                let timeout = setTimeout(
+                const timeout = setTimeout(
                     () => {
                         try {
                             this.enabled = false;
                             this.bot.on('end', () => {});
                             this.bot.end('force');
-                        } catch (e) {}
+                        } catch (e) { /* ignore */ }
                         reject(`Failed to setup the ${this.id} approach in 180 seconds.`);
                     },
                     3 * 60 * 1000
@@ -72,7 +76,7 @@ class MinecraftApproach extends Approach {
                     setTimeout(() => {
                         try {
                             this.bot.chat('/whereami');
-                        } catch (e) {}
+                        } catch (e) { /* ignore */ }
                     }, 1_000);
 
                     resolve();

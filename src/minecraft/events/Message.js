@@ -1,20 +1,6 @@
-const DiscordConsoleEvent = require('#shared/Events/DiscordConsoleEvent.js');
-
-/**
- * @typedef {Object} ChatMessage
- * @property {any} json
- * @property {Function} append
- * @property {Function} clone
- * @property {Object[]} [extra]
- * @property {string} [translate]
- * @property {Function} toString
- * @property {Function} toMotd
- * @property {Function} toAnsi
- * @property {Function} toHTML
- * @property {Function} length
- * @property {Function} getText
- * @property {Function} valueOf
- */
+const Logger = require("#root/src/Logger.js");
+const InboundMinecraftMessage = require("#shared/Events/InboundMinecraftMessage.js");
+const parser = require("#shared/ParseHypixelMessage.js");
 
 class MessageManager {
     /**
@@ -26,14 +12,17 @@ class MessageManager {
         this.minecraft = minecraft_instance;
     }
 
-    /**
-     * @param {ChatMessage} message
-     */
     async handle(message) {
+        /**
+         * @type {String}
+         */
         const cleanMessage = message.toString();
+        /**
+         * @type {String}
+         */
         const coloredMessage = message.toMotd();
 
-        this.minecraft.emitEvent(new DiscordConsoleEvent(this.minecraft.id, coloredMessage)).catch((e) => {
+        this.minecraft.emitEvent(new InboundMinecraftMessage(this.minecraft.id, cleanMessage, coloredMessage)).catch((e) => {
             console.log(e);
         });
 
@@ -45,6 +34,25 @@ class MessageManager {
             this.minecraft.bot.chat('/limbo');
             return;
         }
+
+        if(parser.hypixelMute(cleanMessage).found) {
+            Logger.error("Detected Hypixel mute message, exiting to prevent further issues.");
+            process.exit(123);
+        }
+
+        /*let guildJoinRequest = parser.guildJoinRequest(cleanMessage);
+        let guildJoin = parser.guildJoin(cleanMessage);
+
+        if (guildJoinRequest.found) {
+            try{
+                let uuid = await 
+            }
+            catch(e) {
+                this.minecraft.bot.chat(`/oc Could not check guild member information automatically.`);
+                return;
+            }
+            
+        }*/
     }
 }
 
