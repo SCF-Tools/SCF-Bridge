@@ -2,7 +2,7 @@ const cache = new Map();
 
 setInterval(() => {
     for (const key of cache.keys()) {
-        let timestamp = cache.get(key).expired;
+        const timestamp = cache.get(key).expired;
         if (new Date().getTime() <= timestamp) {
             continue;
         }
@@ -13,13 +13,13 @@ setInterval(() => {
 
 module.exports = {
     async fetch(id, ttl, fetch_function) {
-        let cache_entry = this.isCached(id);
+        const cache_entry = this.isCached(id);
 
         if (cache_entry.found) {
             return cache_entry.value;
         }
 
-        let value = await fetch_function();
+        const value = await fetch_function();
 
         cache.set(id, {
             expired: new Date().getTime() + ttl,
@@ -30,7 +30,7 @@ module.exports = {
     },
 
     isCached(id) {
-        let response = {
+        const response = {
             found: false,
             value: null
         };
@@ -39,7 +39,7 @@ module.exports = {
             return response;
         }
 
-        let cache_entry = cache.get(id);
+        const cache_entry = cache.get(id);
 
         if (new Date().getTime() > cache_entry.expired) {
             cache.delete(id);

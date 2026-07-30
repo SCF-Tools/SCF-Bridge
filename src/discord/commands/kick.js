@@ -29,19 +29,19 @@ class KickCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.MODERATOR);
 
-        let nick = interaction.options.getString('nick');
-        let reason =
+        const nick = interaction.options.getString('nick');
+        const reason =
             interaction.options.getString('reason') || 'You can rejoin the guild by using the /g join command.';
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let command = `/g kick ${nick} ${reason}`;
+        const command = `/g kick ${nick} ${reason}`;
 
-        let event = new OutboundMinecraftMessage(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Guild Kick')
             .setDescription(`The command to kick \`${nick}\` was sent.`);

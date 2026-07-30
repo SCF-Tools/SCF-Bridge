@@ -12,7 +12,7 @@ class Application {
     approaches = [];
 
     async init() {
-        let needed_approaches = {
+        const needed_approaches = {
             minecraft: {
                 class: MinecraftApproach,
                 config: config.approaches.minecraft
@@ -31,7 +31,7 @@ class Application {
             }
         };
 
-        let promises = [];
+        const promises = [];
 
         for (const [approach_id, approach] of Object.entries(needed_approaches)) {
             promises.push(

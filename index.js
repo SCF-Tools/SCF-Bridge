@@ -30,7 +30,7 @@ async function initParent() {
     const config = config_loader.get();
 
     async function useWebhook(message, color = branding.color.info) {
-        let params = {
+        const params = {
             content: config.errors.role,
             embeds: [
                 {
@@ -97,13 +97,13 @@ async function initParent() {
     async function handleEmergencyLongpoll() {
         try {
             if (!config.SCF) return;
-            let requests = await config.SCF.API.longpoll.getApplicable();
+            const requests = await config.SCF.API.longpoll.getApplicable();
 
-            for (let action of requests) {
+            for (const action of requests) {
                 try {
-                    let act_rid = action.rid ?? 'NONE';
-                    let act_type = action.action ?? 'NONE';
-                    let act_data = action.data ?? {};
+                    const act_rid = action.rid ?? 'NONE';
+                    const act_type = action.action ?? 'NONE';
+                    
                     let completed = false;
 
                     if (act_type == 'forceReboot') {
@@ -136,7 +136,7 @@ async function initParent() {
         }
     }
 
-    let states = {
+    const states = {
         TERMINATED: -1,
         STOPPED: 0,
         STARTED: 1

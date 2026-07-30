@@ -20,15 +20,15 @@ class ExternalEventManager {
         }
 
         if (event instanceof OutboundMinecraftMessage) {
-            let command = event.payload.message.toString().slice(0, 250);
+            const command = event.payload.message.toString().slice(0, 250);
             
             this.minecraft.bot.chat(command);
         }
 
         if (event instanceof InboundDiscordMessage) {
             const channels = event.channels;
-            let message = event.payload.message;
-            let nick = event.payload.player.display_name;
+            const message = event.payload.message;
+            const nick = event.payload.player.display_name;
             let channel = '/gc';
 
             if (event.payload.channel == channels.OFFICER) channel = '/oc';

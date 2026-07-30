@@ -32,5 +32,8 @@
         "dotenv": "^17.2.3",
         "mineflayer": "^4.33.0",
         "scf-api": "1.4.0"
+    },
+    "devDependencies": {
+        "eslint-plugin-import": "^2.32.0"
     }
 }

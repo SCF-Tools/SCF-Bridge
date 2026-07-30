@@ -5,7 +5,7 @@ const { Client, GatewayIntentBits, ActivityType, Collection } = require('discord
 const CustomEmbed = require('./modules/CustomEmbed.js');
 const safeDiscord = require('./modules/SafeDiscord.js');
 const fs = require('fs');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v9.js');
 const { REST } = require('@discordjs/rest');
 const branding = require('#root/Branding.js');
 
@@ -132,7 +132,7 @@ class DiscordApproach extends Approach {
                 ]
             });
 
-            let guild_channel = this.channels.get('guild');
+            const guild_channel = this.channels.get('guild');
             if (guild_channel) {
                 await safeDiscord.send(guild_channel, {
                     embeds: [
@@ -142,7 +142,7 @@ class DiscordApproach extends Approach {
                         }
                     ]
                 });
-            } else logger.error(`Channel "guild" not found on ${this.id}!`);
+            } else {logger.error(`Channel "guild" not found on ${this.id}!`);}
 
             await this.registerMessageHandler();
             await this.registerCommandHandler();
@@ -205,7 +205,7 @@ class DiscordApproach extends Approach {
                         error_message = `\`\`\`${e?.message || 'Unknown error.'}\`\`\``;
                     }
 
-                    let embed = new CustomEmbed();
+                    const embed = new CustomEmbed();
 
                     embed.setTitle('Failed to execute your command!').setDescription(error_message).setColor(branding.color.fail);
 

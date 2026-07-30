@@ -32,7 +32,7 @@ class DeployCommand extends DiscordCommand {
 
         setTimeout(updateCode, 10_000);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Bridge Deploy')
             .setDescription(`The bridge will restart to deploy the latest version in 10 seconds.`);

@@ -23,15 +23,15 @@ class SimulateCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.OWNER);
 
-        let message = interaction.options.getString('message');
+        const message = interaction.options.getString('message');
         if (!message) {
             throw new UserError('The message cannot be empty.');
         }
 
-        let event = new InboundMinecraftMessage("external_approach", message, message);
+        const event = new InboundMinecraftMessage("external_approach", message, message);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Message Simulated')
             .setDescription(`The message was successfully injected.`);

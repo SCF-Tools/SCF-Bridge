@@ -23,7 +23,7 @@ class MessageManager {
      * @param {import("discord.js").GuildMember} member
      */
     async screenPlayer(member) {
-        let player_info = {
+        const player_info = {
             display_name: member.nickname,
             user: {
                 uuid: null,
@@ -44,7 +44,7 @@ class MessageManager {
                 return;
             }
 
-            let link_uuid = await cache.fetch(`scf-bridge-link-${member.id}`, 60_000, async () => {
+            const link_uuid = await cache.fetch(`scf-bridge-link-${member.id}`, 60_000, async () => {
                 return (await config.SCF.API.bridge.getLinked(null, member.id)).uuid;
             });
             if (!link_uuid) {
@@ -52,12 +52,12 @@ class MessageManager {
                 return;
             }
 
-            let bridgelocked = await cache.fetch(`scf-bridge-lock-${link_uuid}`, 15_000, async () => {
+            const bridgelocked = await cache.fetch(`scf-bridge-lock-${link_uuid}`, 15_000, async () => {
                 return (await config.SCF.API.bridgelock.check(link_uuid)).locked;
             });
             player_info.issues.bridgelocked = bridgelocked;
 
-            let mojang_account = await Mojang.fetchByUUID(link_uuid);
+            const mojang_account = await Mojang.fetchByUUID(link_uuid);
             if (!mojang_account.uuid) {
                 player_info.issues.not_linked = true;
                 return;
@@ -71,12 +71,12 @@ class MessageManager {
 
         if (player_info.user.uuid) {
             try {
-                let guild_info = await Hypixel.fetch(
+                const guild_info = await Hypixel.fetch(
                     `https://api.hypixel.net/v2/guild?player=${player_info.user.uuid}`
                 );
 
                 player_info.user.guild_id = guild_info?.guild?._id;
-            } catch (e) { }
+            } catch (e) { /* ignore */ }
         }
 
         return player_info;
@@ -99,7 +99,7 @@ class MessageManager {
                 return; // We are not listening to bot messages.
             }
 
-            let playerInfo = await this.screenPlayer(message.member);
+            const playerInfo = await this.screenPlayer(message.member);
             if (playerInfo.issues.not_linked) {
                 await message.reply({
                     embeds: [
@@ -113,13 +113,13 @@ class MessageManager {
             }
 
             if (playerInfo.issues.bridgelocked) {
-                await message.react('🚫').catch((e) => { });
+                await message.react('🚫').catch((e) => { /* ignore */ });
                 return;
             }
 
-            let cleaned_message = message.content;
+            const cleaned_message = message.content;
 
-            let event = new InboundDiscordMessage(this.discord.id, cleaned_message, '', {
+            const event = new InboundDiscordMessage(this.discord.id, cleaned_message, '', {
                 display_name: playerInfo.display_name,
                 uuid: playerInfo.user.uuid,
                 guild_id: playerInfo.user.guild_id
@@ -127,7 +127,7 @@ class MessageManager {
 
             // Debug Messages
             if (message.channel.id === this.discord.config.channels.console) {
-                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.OWNER, true);
+                const can_execute = Permissions.canExecute(message.member, Permissions.tiers.OWNER, true);
                 if (!can_execute) {
                     message.react('❌');
                     return;
@@ -137,7 +137,7 @@ class MessageManager {
             }
 
             if (message.channel.id === this.discord.config.channels.officer) {
-                let can_execute = Permissions.canExecute(message.member, Permissions.tiers.MODERATOR, true);
+                const can_execute = Permissions.canExecute(message.member, Permissions.tiers.MODERATOR, true);
                 if (!can_execute) {
                     message.react('❌');
                     return;
@@ -152,7 +152,7 @@ class MessageManager {
 
             this.discord.emitEvent(event);
         } catch (e) {
-            await message.react('❗').catch((e) => { });
+            await message.react('❗').catch((e) => { /* ignore */ });
             console.log(e);
         }
     }

@@ -23,17 +23,17 @@ class UnmuteCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.MODERATOR);
 
-        let nick = interaction.options.getString('nick');
+        const nick = interaction.options.getString('nick');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let command = `/g unmute ${nick}`;
+        const command = `/g unmute ${nick}`;
 
-        let event = new OutboundMinecraftMessage(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Guild Unmute')
             .setDescription(`The command to unmute \`${nick}\` was sent.`);

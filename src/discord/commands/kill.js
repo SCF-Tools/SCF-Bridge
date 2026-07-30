@@ -18,7 +18,7 @@ class KillCommand extends DiscordCommand {
             process.exit(123);
         }, 10_000);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Bridge Kill')
             .setDescription(`The bridge will stop in 10 seconds.`);

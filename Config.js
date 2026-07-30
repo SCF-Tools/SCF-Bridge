@@ -30,9 +30,9 @@ class Config {
             /**
              * @type {SCFAPIClient.default}
              */
-            let SCF_CONFIG_CLIENT = new SCFAPIClient(process.env.scf_api, process.env.discord_token);
+            const SCF_CONFIG_CLIENT = new SCFAPIClient(process.env.scf_api, process.env.discord_token);
 
-            let config = await SCF_CONFIG_CLIENT.API.services.getConfig();
+            const config = await SCF_CONFIG_CLIENT.API.services.getConfig();
 
             this.#external.config = config;
 
@@ -49,10 +49,10 @@ class Config {
             throw new Error('Trying to use an uninitialized external config.');
         }
 
-        let process_env = process.env?.[name];
-        let external_env = this.#external.config?.[name];
+        const process_env = process.env?.[name];
+        const external_env = this.#external.config?.[name];
 
-        let final_env = external_env ?? process_env;
+        const final_env = external_env ?? process_env;
 
         return final_env;
     }
@@ -65,8 +65,8 @@ class Config {
                 try {
                     let error_message = "An unexpected error occurred.";
 
-                    let axios_response = error?.data?.axios;
-                    let error_status = axios_response?.status;
+                    const axios_response = error?.data?.axios;
+                    const error_status = axios_response?.status;
 
                     if (error_status != 200) {
                         // Either HTTP Error OR undefined (= other issue)

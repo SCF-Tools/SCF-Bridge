@@ -32,10 +32,10 @@ class ExecuteCommand extends DiscordCommand {
             command = '/' + command;
         }
 
-        let event = new OutboundMinecraftMessage(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Command Executed')
             .setDescription(`The command \`${command}\` has been executed.`);

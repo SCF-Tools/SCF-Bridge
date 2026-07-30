@@ -1,6 +1,6 @@
 // Credits https://github.com/Altpapier/hypixel-discord-guild-bridge/blob/master/helper/messageToImage.js
 
-const { GlobalFonts, createCanvas, loadImage } = require('@napi-rs/canvas');
+const { GlobalFonts, createCanvas } = require('@napi-rs/canvas');
 GlobalFonts.registerFromPath(__dirname + '/Fonts/MinecraftRegular-Bmg3.ttf', 'BridgeMinecraft');
 GlobalFonts.registerFromPath(__dirname + '/Fonts/unifont.ttf', 'BridgeMinecraftUnicode');
 

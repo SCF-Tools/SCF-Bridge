@@ -23,17 +23,17 @@ class PromoteCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.ADMINISTRATOR);
 
-        let nick = interaction.options.getString('nick');
+        const nick = interaction.options.getString('nick');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let command = `/g promote ${nick}`;
+        const command = `/g promote ${nick}`;
 
-        let event = new OutboundMinecraftMessage(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Guild Promotion')
             .setDescription(`The command to promote \`${nick}\` was sent.`);

@@ -38,7 +38,7 @@ class ExternalEventManager {
                         })
                     ]
                 });
-            } catch (e) {}
+            } catch (e) { /* ignore */ }
 
             /**
              * Think how to manage methods like
@@ -53,15 +53,15 @@ class ExternalEventManager {
              * Events related to mutes.
              */
 
-            let guildMute = parser.guildMute(cleaned_message);
-            let userMute = parser.userMute(cleaned_message);
+            const guildMute = parser.guildMute(cleaned_message);
+            const userMute = parser.userMute(cleaned_message);
 
             if (guildMute.found || userMute.found) {
-                let nick = escapeMarkdown(userMute.parts.nick || 'Guild Chat');
-                let staff = escapeMarkdown(guildMute.parts.staff || userMute.parts.staff);
-                let duration = guildMute.parts.duration || userMute.parts.duration;
+                const nick = escapeMarkdown(userMute.parts.nick || 'Guild Chat');
+                const staff = escapeMarkdown(guildMute.parts.staff || userMute.parts.staff);
+                const duration = guildMute.parts.duration || userMute.parts.duration;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(`${nick} was muted by ${staff} for ${duration}`);
                 embed.setColor(branding.color.fail);
 
@@ -74,14 +74,14 @@ class ExternalEventManager {
                 return;
             }
 
-            let guildUnmute = parser.guildUnmute(cleaned_message);
-            let userUnmute = parser.userUnmute(cleaned_message);
+            const guildUnmute = parser.guildUnmute(cleaned_message);
+            const userUnmute = parser.userUnmute(cleaned_message);
 
             if (guildUnmute.found || userUnmute.found) {
-                let nick = escapeMarkdown(userUnmute.parts.nick || 'Guild Chat');
-                let staff = escapeMarkdown(guildUnmute.parts.staff || userUnmute.parts.staff);
+                const nick = escapeMarkdown(userUnmute.parts.nick || 'Guild Chat');
+                const staff = escapeMarkdown(guildUnmute.parts.staff || userUnmute.parts.staff);
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(`${nick} was unmuted by ${staff}`);
                 embed.setColor(branding.color.success);
 
@@ -95,14 +95,14 @@ class ExternalEventManager {
                 return;
             }
 
-            let alreadyMuted = parser.alreadyMuted(cleaned_message);
-            let muteIsTooLong = parser.muteIsTooLong(cleaned_message);
+            const alreadyMuted = parser.alreadyMuted(cleaned_message);
+            const muteIsTooLong = parser.muteIsTooLong(cleaned_message);
 
             if (alreadyMuted.found || muteIsTooLong.found) {
                 let error_message = `The user was already muted.`;
                 if (muteIsTooLong.found) error_message = `You cannot mute someone for more than one month!`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 
@@ -117,13 +117,13 @@ class ExternalEventManager {
              * Events related to ranks.
              */
 
-            let guildPromotion = parser.guildPromotion(cleaned_message);
-            let guildDemotion = parser.guildDemotion(cleaned_message);
+            const guildPromotion = parser.guildPromotion(cleaned_message);
+            const guildDemotion = parser.guildDemotion(cleaned_message);
 
             if (guildPromotion.found || guildDemotion.found) {
-                let nick = escapeMarkdown(guildPromotion.parts.nick || guildDemotion.parts.nick);
-                let oldRank = guildPromotion.parts.oldRank || guildDemotion.parts.oldRank;
-                let newRank = guildPromotion.parts.newRank || guildDemotion.parts.newRank;
+                const nick = escapeMarkdown(guildPromotion.parts.nick || guildDemotion.parts.nick);
+                const oldRank = guildPromotion.parts.oldRank || guildDemotion.parts.oldRank;
+                const newRank = guildPromotion.parts.newRank || guildDemotion.parts.newRank;
                 let embed_color = branding.color.success;
                 let action = 'promoted';
 
@@ -132,7 +132,7 @@ class ExternalEventManager {
                     action = 'demoted';
                 }
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(`${nick} was ${action} from ${escapeMarkdown(oldRank)} to ${escapeMarkdown(newRank)}`);
                 embed.setColor(embed_color);
 
@@ -145,23 +145,23 @@ class ExternalEventManager {
                 return;
             }
 
-            let rankNotFound = parser.rankNotFound(cleaned_message);
-            let alreadyLowestRank = parser.alreadyLowestRank(cleaned_message);
-            let alreadySameRank = parser.alreadySameRank(cleaned_message);
+            const rankNotFound = parser.rankNotFound(cleaned_message);
+            const alreadyLowestRank = parser.alreadyLowestRank(cleaned_message);
+            const alreadySameRank = parser.alreadySameRank(cleaned_message);
 
             if (rankNotFound.found || alreadyLowestRank.found || alreadySameRank.found) {
                 let error_message = 'An error was encountered.';
 
                 if (rankNotFound.found)
-                    error_message = `Rank ${escapeMarkdown(rankNotFound.parts.rank)} does not exist.`;
+                {error_message = `Rank ${escapeMarkdown(rankNotFound.parts.rank)} does not exist.`;}
                 if (alreadyLowestRank.found)
-                    error_message = `${escapeMarkdown(
-                        alreadyLowestRank.parts.nick
-                    )} already has the lowest rank possible.`;
+                {error_message = `${escapeMarkdown(
+                    alreadyLowestRank.parts.nick
+                )} already has the lowest rank possible.`;}
                 if (alreadySameRank.found)
-                    error_message = `The player has that rank already.`;
+                {error_message = `The player has that rank already.`;}
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 
@@ -180,7 +180,7 @@ class ExternalEventManager {
              * TODO: ADD GUILDJOINREQUEST
              */
 
-            let guildJoin = parser.guildJoin(cleaned_message);
+            const guildJoin = parser.guildJoin(cleaned_message);
 
             if(guildJoin.found){
                 /**
@@ -190,17 +190,17 @@ class ExternalEventManager {
                  * It is up for Minecraft side to decide whether to
                  * kick or not.
                  */
-                let raw_nick = guildJoin.parts.nick;
-                let nick = escapeMarkdown(raw_nick);
-                let uuid = (await Mojang.fetchByNick(raw_nick)).uuid;
+                const raw_nick = guildJoin.parts.nick;
+                const nick = escapeMarkdown(raw_nick);
+                const uuid = (await Mojang.fetchByNick(raw_nick)).uuid;
 
-                let check_embed = new CustomEmbed();
+                const check_embed = new CustomEmbed();
                 check_embed.setTitle(`${nick} joined the Guild!`);
                 check_embed.setDescription("The player is not flagged in the Banlists.")
                 check_embed.setColor(branding.color.success);
                 check_embed.setThumbnail(heads.getURL(raw_nick));
                 
-                let join_embed = new EmbedBuilder();
+                const join_embed = new EmbedBuilder();
                 join_embed.setAuthor({
                     name: `${raw_nick} joined the Guild!`,
                     iconURL: heads.getURL(raw_nick)
@@ -210,10 +210,10 @@ class ExternalEventManager {
 
                 try{
                     if(!uuid){
-                        throw "Failed to obtain UUID of the joined player.";
+                        throw new Error("Failed to obtain UUID of the joined player.");
                     }
 
-                    let banlist_info = await Banlists.check(uuid);
+                    const banlist_info = await Banlists.check(uuid);
 
                     if(banlist_info.banned){
                         check_embed.setDescription(`The player **is flagged** in a Banlist!\n\nFlagged by: \`${banlist_info.flagged_by}\`\nReason: \`${banlist_info.reason}\``);
@@ -237,19 +237,19 @@ class ExternalEventManager {
                 return;
             }
 
-            let guildLeave = parser.guildLeave(cleaned_message);
-            let guildKick = parser.guildKick(cleaned_message);
+            const guildLeave = parser.guildLeave(cleaned_message);
+            const guildKick = parser.guildKick(cleaned_message);
 
             if (guildLeave.found || guildKick.found) {
-                let raw_nick = guildLeave.parts.nick || guildKick.parts.nick;
-                let nick = escapeMarkdown(raw_nick);
+                const raw_nick = guildLeave.parts.nick || guildKick.parts.nick;
+                const nick = escapeMarkdown(raw_nick);
 
                 let action = "left";
                 if (guildKick.found) {
                     action = "was kicked from";
                 }
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
 
                 embed.setAuthor({
                     name: `${nick} ${action} the Guild!`,
@@ -270,18 +270,18 @@ class ExternalEventManager {
                 return;
             }
 
-            let onlineInvite = parser.onlineInvite(cleaned_message);
-            let offlineInvite = parser.offlineInvite(cleaned_message);
+            const onlineInvite = parser.onlineInvite(cleaned_message);
+            const offlineInvite = parser.offlineInvite(cleaned_message);
 
             if (onlineInvite.found || offlineInvite.found) {
-                let nick = escapeMarkdown(onlineInvite.parts.nick || offlineInvite.parts.nick);
+                const nick = escapeMarkdown(onlineInvite.parts.nick || offlineInvite.parts.nick);
 
                 let description = `${nick} was invited to the guild!`;
                 if (offlineInvite.found) {
                     description = `${nick} was offline-invited to the guild!`;
                 }
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(description);
                 embed.setColor(branding.color.success);
 
@@ -292,12 +292,12 @@ class ExternalEventManager {
                 return;
             }
 
-            let inviteError = parser.inviteError(cleaned_message);
+            const inviteError = parser.inviteError(cleaned_message);
 
             if (inviteError.found) {
-                let error_message = `Failed to invite a player to the guild!`;
+                const error_message = `Failed to invite a player to the guild!`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 
@@ -312,11 +312,11 @@ class ExternalEventManager {
              * Events related to usual guild events.
              */
 
-            let playerLogin = parser.playerLogin(cleaned_message);
-            let playerLogout = parser.playerLogout(cleaned_message);
+            const playerLogin = parser.playerLogin(cleaned_message);
+            const playerLogout = parser.playerLogout(cleaned_message);
 
             if (playerLogin.found || playerLogout.found) {
-                let nick = playerLogin.parts.nick || playerLogout.parts.nick;
+                const nick = playerLogin.parts.nick || playerLogout.parts.nick;
                 let embed_color = branding.color.success;
                 let action = 'joined';
 
@@ -325,7 +325,7 @@ class ExternalEventManager {
                     action = 'left';
                 }
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setAuthor({
                     name: `${nick} ${action}`,
                     iconURL: heads.getURL(nick)
@@ -338,13 +338,13 @@ class ExternalEventManager {
                 return;
             }
 
-            let questCompletion = parser.questCompletion(cleaned_message);
+            const questCompletion = parser.questCompletion(cleaned_message);
             if (questCompletion.found) {
-                let tier = questCompletion.parts.tier;
+                const tier = questCompletion.parts.tier;
 
-                let description = `Guild Quest tier ${tier} completed!`;
+                const description = `Guild Quest tier ${tier} completed!`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setTitle(`Guild Quest Completed!`);
                 embed.setDescription(description);
                 embed.setColor(0xffd700);
@@ -360,13 +360,13 @@ class ExternalEventManager {
                 return;
             }
 
-            let levelUp = parser.levelUp(cleaned_message);
+            const levelUp = parser.levelUp(cleaned_message);
             if (levelUp.found) {
-                let level = levelUp.parts.level;
+                const level = levelUp.parts.level;
 
-                let description = `The Guild has reached Level ${level}!`;
+                const description = `The Guild has reached Level ${level}!`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setTitle(`Guild Level Up`);
                 embed.setDescription(description);
                 embed.setColor(0xffd700);
@@ -386,11 +386,11 @@ class ExternalEventManager {
              * Error Events
              */
 
-            let repeatMessage = parser.repeatMessage(cleaned_message);
+            const repeatMessage = parser.repeatMessage(cleaned_message);
             
             if(repeatMessage.found){
-                let error_message = `Bot cannot say the same message twice!`;
-                let embed = new EmbedBuilder();
+                const error_message = `Bot cannot say the same message twice!`;
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 
@@ -401,8 +401,8 @@ class ExternalEventManager {
                 return;
             }
 
-            let noPermission = parser.noPermission(cleaned_message);
-            let incorrectUsage = parser.incorrectUsage(cleaned_message);
+            const noPermission = parser.noPermission(cleaned_message);
+            const incorrectUsage = parser.incorrectUsage(cleaned_message);
 
             if (noPermission.found || incorrectUsage.found) {
                 let error_message = 'An error was encountered.';
@@ -410,7 +410,7 @@ class ExternalEventManager {
                 if (noPermission.found) error_message = `Bot is missing permission to run the command.`;
                 if (incorrectUsage.found) error_message = `The command was used incorrectly.`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 
@@ -421,16 +421,16 @@ class ExternalEventManager {
                 return;
             }
 
-            let playerNotFound = parser.playerNotFound(cleaned_message);
-            let notInGuild = parser.notInGuild(cleaned_message);
+            const playerNotFound = parser.playerNotFound(cleaned_message);
+            const notInGuild = parser.notInGuild(cleaned_message);
 
             if (playerNotFound.found || notInGuild.found) {
-                let nick = escapeMarkdown(playerNotFound.parts.nick || notInGuild.parts.nick);
+                const nick = escapeMarkdown(playerNotFound.parts.nick || notInGuild.parts.nick);
                 let error_message = `Player ${nick} not found!`;
 
                 if (notInGuild.found) error_message = `${nick} is not in this guild!`;
 
-                let embed = new EmbedBuilder();
+                const embed = new EmbedBuilder();
                 embed.setDescription(error_message);
                 embed.setColor(branding.color.fail);
 

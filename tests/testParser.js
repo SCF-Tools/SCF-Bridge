@@ -1,7 +1,7 @@
 const parser = require("#shared/ParseHypixelMessage.js");
-let chalk = require("chalk");
+const chalk = require("chalk");
 
-let tests = [
+const tests = [
     // Related to mutes:
     {
         parser: parser.guildMute,
@@ -213,8 +213,8 @@ let fails = 0;
 
 for (const test of tests) {
     total++;
-    let parser = test.parser;
-    let response = parser(test.message);
+    const parser = test.parser;
+    const response = parser(test.message);
 
     if (!response.found) {
         console.log(`${chalk.bgRedBright(` Fail `)} ${chalk.redBright(`Method ${parser.name} did not find a match.`)} ${chalk.redBright(`${total}/${tests.length}`)}`);
@@ -223,7 +223,7 @@ for (const test of tests) {
         continue;
     }
 
-    let invalid_values = [];
+    const invalid_values = [];
     for (const [name, value] of Object.entries(test.values)) {
         if (response?.parts?.[name] != value) {
             invalid_values.push(`Expected ${name} to be ${value}, but got ${response?.parts?.[name]}`);

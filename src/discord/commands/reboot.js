@@ -18,7 +18,7 @@ class RebootCommand extends DiscordCommand {
             process.exit(0);
         }, 10_000);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Bridge Reboot')
             .setDescription(`The bridge will restart in 10 seconds.`);

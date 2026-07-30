@@ -23,7 +23,7 @@ class CreditsCommand extends DiscordCommand {
         used_sources += "Implements parts of [DuckySoLucky's Bridge](https://github.com/duckysolucky/hypixel-discord-chat-bridge)\n";
         used_sources += "Uses [SCF API](https://github.com/SCF-Tools/SCF-API-Client)\n";
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Credits')
             .setDescription(used_sources);

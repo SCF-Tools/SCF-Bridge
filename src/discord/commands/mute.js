@@ -29,18 +29,18 @@ class MuteCommand extends DiscordCommand {
     async execute(interaction) {
         Permissions.canExecute(interaction.member, Permissions.tiers.MODERATOR);
 
-        let nick = interaction.options.getString('nick');
-        let duration = interaction.options.getString('duration');
+        const nick = interaction.options.getString('nick');
+        const duration = interaction.options.getString('duration');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let command = `/g mute ${nick} ${duration}`;
+        const command = `/g mute ${nick} ${duration}`;
 
-        let event = new OutboundMinecraftMessage(this.approach.id, command);
+        const event = new OutboundMinecraftMessage(this.approach.id, command);
         this.approach.emitEvent(event);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Guild Mute')
             .setDescription(`The command to mute \`${nick}\` was sent.`);

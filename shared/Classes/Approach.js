@@ -1,5 +1,4 @@
 const logger = require('#src/Logger.js');
-const GenericEvent = require('#shared/Events/GenericEvent.js');
 
 class Approach {
     id;
@@ -21,7 +20,7 @@ class Approach {
     }
 
     /**
-     * @param {GenericEvent} event
+     * @param {import('../Events/GenericEvent.js')} event
      */
     async emitEvent(event) {
         if (!this.enabled) {
@@ -42,7 +41,7 @@ class Approach {
     }
 
     /**
-     * @param {GenericEvent} event
+     * @param {import('../Events/GenericEvent.js')} event
      */
     async handleEvent(event) {
         throw new Error('Event handling was not implemented.');

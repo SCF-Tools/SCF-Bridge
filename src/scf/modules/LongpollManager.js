@@ -22,20 +22,20 @@ class LongpollManager {
 
         this.inAction = true;
 
-        let requests = await this.scf.client.API.longpoll.getApplicable();
-        for (let action of requests) {
+        const requests = await this.scf.client.API.longpoll.getApplicable();
+        for (const action of requests) {
             try {
-                let act_rid = action.rid ?? 'NONE';
-                let act_type = action.action ?? 'NONE';
-                let act_data = action.data ?? {};
+                const act_rid = action.rid ?? 'NONE';
+                const act_type = action.action ?? 'NONE';
+                const act_data = action.data ?? {};
                 let completed = false;
 
                 if (act_type == 'kick') {
                     const username = act_data.username;
                     const reason = act_data.reason;
 
-                    let command = `/g kick ${username} ${reason}`;
-                    let event = new OutboundMinecraftMessage(this.scf.id, command);
+                    const command = `/g kick ${username} ${reason}`;
+                    const event = new OutboundMinecraftMessage(this.scf.id, command);
                     this.scf.emitEvent(event);
 
                     completed = true;
@@ -45,8 +45,8 @@ class LongpollManager {
                     const username = act_data.username;
                     const rank = act_data.newRank;
 
-                    let command = `/g setrank ${username} ${rank}`;
-                    let event = new OutboundMinecraftMessage(this.scf.id, command);
+                    const command = `/g setrank ${username} ${rank}`;
+                    const event = new OutboundMinecraftMessage(this.scf.id, command);
                     this.scf.emitEvent(event);
 
                     completed = true;
@@ -61,7 +61,7 @@ class LongpollManager {
                 }
 
                 if (act_type == 'deploy') {
-                    function updateCode() {
+                    const updateCode = function () {
                         try {
                             execSync('git pull');
                             execSync('git fetch --all');
@@ -75,7 +75,7 @@ class LongpollManager {
                         }
                     }
 
-                    let timeout = Math.max(1, act_data.timeout ?? 0) * 10000;
+                    const timeout = Math.max(1, act_data.timeout ?? 0) * 10000;
                     setTimeout(updateCode, timeout);
 
                     completed = true;
@@ -85,11 +85,11 @@ class LongpollManager {
                     const username = act_data.username;
                     const uuid = act_data.uuid;
 
-                    let banlist = await banlists.check(uuid);
+                    const banlist = await banlists.check(uuid);
 
                     if (!banlist.banned) {
-                        let command = `/guild invite ${username}`;
-                        let event = new OutboundMinecraftMessage(this.scf.id, command);
+                        const command = `/guild invite ${username}`;
+                        const event = new OutboundMinecraftMessage(this.scf.id, command);
                         this.scf.emitEvent(event);
                     }
 

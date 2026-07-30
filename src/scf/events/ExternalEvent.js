@@ -18,14 +18,14 @@ class ExternalEventManager {
      */
     async handle(event) {
         if (event instanceof InboundMinecraftMessage) {
-            let message = event.payload.message;
+            const message = event.payload.message;
 
-            let guildLeave = parser.guildLeave(message);
-            let guildKick = parser.guildKick(message);
+            const guildLeave = parser.guildLeave(message);
+            const guildKick = parser.guildKick(message);
 
             if (guildLeave.found || guildKick.found) {
-                let nick = guildLeave.parts.nick || guildKick.parts.nick;
-                let profile = await Mojang.fetchByNick(nick);
+                const nick = guildLeave.parts.nick || guildKick.parts.nick;
+                const profile = await Mojang.fetchByNick(nick);
 
                 if (!profile.uuid) {
                     Logger.error(`[SCF API] Failed to handle leave event, no UUID found!`, nick);

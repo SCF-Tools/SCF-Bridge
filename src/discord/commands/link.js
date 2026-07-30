@@ -26,18 +26,18 @@ class LinkCommand extends DiscordCommand {
             throw new UserError('SCF Features are disabled.');
         }
 
-        let nick = interaction.options.getString('nick');
+        const nick = interaction.options.getString('nick');
         if (!nick) {
             throw new UserError('The nick cannot be empty.');
         }
 
-        let minecraft_profile = await Mojang.fetchByNick(nick);
+        const minecraft_profile = await Mojang.fetchByNick(nick);
         if (!minecraft_profile.uuid) {
             throw new UserError('The player with this nick does not exist!');
         }
 
-        let guild_info = await Hypixel.fetch(`https://api.hypixel.net/v2/player?uuid=${minecraft_profile.uuid}`);
-        let discord_tag = guild_info?.player?.socialMedia?.links?.DISCORD ?? "";
+        const guild_info = await Hypixel.fetch(`https://api.hypixel.net/v2/player?uuid=${minecraft_profile.uuid}`);
+        const discord_tag = guild_info?.player?.socialMedia?.links?.DISCORD ?? "";
 
         if(discord_tag.toLowerCase() != interaction.user.tag.toLowerCase()){
             throw new UserError(`Your linked Discord account on Hypixel is different from this one!\n\nTag on Hypixel: ${discord_tag}\nDiscord Tag: ${interaction.user.tag}`);
@@ -45,7 +45,7 @@ class LinkCommand extends DiscordCommand {
 
         await config.SCF.API.bridge.link(interaction.user.id, minecraft_profile.uuid);
 
-        let response = new CustomEmbed()
+        const response = new CustomEmbed()
             .setColor(branding.color.success)
             .setTitle('Bridge Link')
             .setDescription(`You will now send messages as \`${minecraft_profile.nick}\`!`);
